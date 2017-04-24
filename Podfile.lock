@@ -13,7 +13,7 @@ PODS:
     - SwiftPlaceholderTextView/Main
   - SwiftPlaceholderTextView/Main (1.1.6):
     - SwiftUIUtilities/Main
-  - SwiftUIUtilities/Main (1.2.6):
+  - SwiftUIUtilities/Main (1.2.7):
     - SwiftUtilities/Main
   - SwiftUtilities/Main (1.3.7):
     - RxCocoa (~> 3.0)
@@ -41,7 +41,7 @@ SPEC CHECKSUMS:
   RxTest: beb6beb882cf1dcac5fc9fdbd4760a5254e7f3a6
   SwiftInputView: 3177b63655900f7f13538407184e9e95062e2e97
   SwiftPlaceholderTextView: 77850bab1c569d7663a21bceeaf70c6ac01e42e2
-  SwiftUIUtilities: fe987d0de1f82c0844ab36807bfbd4fb7b2efe4f
+  SwiftUIUtilities: 94a7f749d60f60703fe50eadb9d906baa4927538
   SwiftUtilities: 86922f1fde600d7e2f8d236e09098f717d0f1502
   SwiftUtilitiesTests: f1d9589b6444a7ac4b83981d020e2ef8782eea1a
 

@@ -10,6 +10,24 @@ import SwiftInputView
 import SwiftUIUtilities
 import SwiftUtilities
 
+/// Implement this protocol to provide an Array of InputViewDetailValidatorType.
+public protocol InputHolderType {
+    var inputs: [InputViewDetailValidatorType] { get }
+    
+    /// We can simply return inputs here.
+    var inputDetails: [InputViewDetailType] { get }
+    
+    /// We can simply return inputs here.
+    var inputDecorators: [InputViewDecoratorType] { get }
+}
+
+public extension InputHolderType {
+    /// Get the largest height, based on all stored InputViewDetailType.
+    public var largestHeight: CGFloat {
+        return inputDetails.flatMap({$0.inputViewHeight}).max() ?? 0
+    }
+}
+
 /// Use this struct to carry InputViewDetailValidatorType instances, instead 
 /// of having an Array of InputViewDetailValidatorType Array for multiple 
 /// inputs.
@@ -101,9 +119,6 @@ public extension InputHolder {
     public var inputDecorators: [InputViewDecoratorType] {
         return inputs
     }
-    
-    /// Get the largest height, based on all stored InputViewDetailType.
-    public var largestHeight: CGFloat {
-        return inputDetails.flatMap({$0.inputViewHeight}).max() ?? 0
-    }
 }
+
+extension InputHolder: InputHolderType {}

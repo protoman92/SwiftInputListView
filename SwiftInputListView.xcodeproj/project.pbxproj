@@ -10,11 +10,11 @@
 		803B2C0831D91FE46D1241C3 /* Pods_SwiftInputListView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4D9EEA94835940FD192BFA3 /* Pods_SwiftInputListView.framework */; };
 		D2C1B24E8F12F7717B7F36BA /* Pods_SwiftInputListViewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9956F85F1EDB31E4AA3EB326 /* Pods_SwiftInputListViewTests.framework */; };
 		D329CB491EADBC32005D512E /* SwiftInputListView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D329CB3F1EADBC32005D512E /* SwiftInputListView.framework */; };
-		D329CB4E1EADBC32005D512E /* SwiftInputListViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB4D1EADBC32005D512E /* SwiftInputListViewTests.swift */; };
 		D329CB501EADBC32005D512E /* SwiftInputListView.h in Headers */ = {isa = PBXBuildFile; fileRef = D329CB421EADBC32005D512E /* SwiftInputListView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D329CB5A1EADBD77005D512E /* UIAdaptableInputListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB591EADBD77005D512E /* UIAdaptableInputListView.swift */; };
 		D329CB651EADD6DC005D512E /* InputHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB641EADD6DC005D512E /* InputHolder.swift */; };
 		D329CB671EADD8B6005D512E /* InputViewDetailValidatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */; };
+		D329CB781EAE6A0B005D512E /* InputListViewDecoratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,11 +34,11 @@
 		D329CB421EADBC32005D512E /* SwiftInputListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftInputListView.h; sourceTree = "<group>"; };
 		D329CB431EADBC32005D512E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D329CB481EADBC32005D512E /* SwiftInputListViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftInputListViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D329CB4D1EADBC32005D512E /* SwiftInputListViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftInputListViewTests.swift; sourceTree = "<group>"; };
 		D329CB4F1EADBC32005D512E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D329CB591EADBD77005D512E /* UIAdaptableInputListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIAdaptableInputListView.swift; path = view/UIAdaptableInputListView.swift; sourceTree = "<group>"; };
 		D329CB641EADD6DC005D512E /* InputHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputHolder.swift; path = model/InputHolder.swift; sourceTree = "<group>"; };
 		D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewDetailValidatorType.swift; path = model/InputViewDetailValidatorType.swift; sourceTree = "<group>"; };
+		D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputListViewDecoratorType.swift; path = model/InputListViewDecoratorType.swift; sourceTree = "<group>"; };
 		D9C402CE96FA95F82152C34E /* Pods-SwiftInputListView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListView.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListView/Pods-SwiftInputListView.release.xcconfig"; sourceTree = "<group>"; };
 		E97AA8BA9E88EAA4A23CE7E3 /* Pods-SwiftInputListViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ECFE82123D58D7DFE476EEE9 /* Pods-SwiftInputListViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -111,7 +111,6 @@
 		D329CB4C1EADBC32005D512E /* SwiftInputListViewTests */ = {
 			isa = PBXGroup;
 			children = (
-				D329CB4D1EADBC32005D512E /* SwiftInputListViewTests.swift */,
 				D329CB4F1EADBC32005D512E /* Info.plist */,
 			);
 			path = SwiftInputListViewTests;
@@ -130,6 +129,7 @@
 			children = (
 				D329CB641EADD6DC005D512E /* InputHolder.swift */,
 				D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */,
+				D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -341,6 +341,7 @@
 			files = (
 				D329CB651EADD6DC005D512E /* InputHolder.swift in Sources */,
 				D329CB671EADD8B6005D512E /* InputViewDetailValidatorType.swift in Sources */,
+				D329CB781EAE6A0B005D512E /* InputListViewDecoratorType.swift in Sources */,
 				D329CB5A1EADBD77005D512E /* UIAdaptableInputListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,7 +350,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D329CB4E1EADBC32005D512E /* SwiftInputListViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
