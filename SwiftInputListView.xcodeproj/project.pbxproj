@@ -15,6 +15,11 @@
 		D329CB651EADD6DC005D512E /* InputHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB641EADD6DC005D512E /* InputHolder.swift */; };
 		D329CB671EADD8B6005D512E /* InputViewDetailValidatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */; };
 		D329CB781EAE6A0B005D512E /* InputListViewDecoratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */; };
+		D3B7811F1EAF3ED1008D544D /* InputSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B7811E1EAF3ED1008D544D /* InputSection.swift */; };
+		D3B781251EAF47B5008D544D /* InputViewHeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B781241EAF47B5008D544D /* InputViewHeaderBuilder.swift */; };
+		D3B781271EAF494A008D544D /* InputViewHeaderIdentifierType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B781261EAF494A008D544D /* InputViewHeaderIdentifierType.swift */; };
+		D3B781291EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B781281EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift */; };
+		D3B7812B1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B7812A1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +44,11 @@
 		D329CB641EADD6DC005D512E /* InputHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputHolder.swift; path = model/InputHolder.swift; sourceTree = "<group>"; };
 		D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewDetailValidatorType.swift; path = model/InputViewDetailValidatorType.swift; sourceTree = "<group>"; };
 		D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputListViewDecoratorType.swift; path = model/InputListViewDecoratorType.swift; sourceTree = "<group>"; };
+		D3B7811E1EAF3ED1008D544D /* InputSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputSection.swift; path = model/InputSection.swift; sourceTree = "<group>"; };
+		D3B781241EAF47B5008D544D /* InputViewHeaderBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderBuilder.swift; path = builder/InputViewHeaderBuilder.swift; sourceTree = "<group>"; };
+		D3B781261EAF494A008D544D /* InputViewHeaderIdentifierType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderIdentifierType.swift; path = builder/InputViewHeaderIdentifierType.swift; sourceTree = "<group>"; };
+		D3B781281EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderBuilderConfig.swift; path = builder/InputViewHeaderBuilderConfig.swift; sourceTree = "<group>"; };
+		D3B7812A1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderDecoratorType.swift; path = builder/InputViewHeaderDecoratorType.swift; sourceTree = "<group>"; };
 		D9C402CE96FA95F82152C34E /* Pods-SwiftInputListView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListView.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListView/Pods-SwiftInputListView.release.xcconfig"; sourceTree = "<group>"; };
 		E97AA8BA9E88EAA4A23CE7E3 /* Pods-SwiftInputListViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ECFE82123D58D7DFE476EEE9 /* Pods-SwiftInputListViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +110,7 @@
 		D329CB411EADBC32005D512E /* SwiftInputListView */ = {
 			isa = PBXGroup;
 			children = (
+				D3B781231EAF4797008D544D /* builder */,
 				D329CB631EADD6CE005D512E /* model */,
 				D329CB621EADD6C9005D512E /* view */,
 				D329CB421EADBC32005D512E /* SwiftInputListView.h */,
@@ -127,11 +138,23 @@
 		D329CB631EADD6CE005D512E /* model */ = {
 			isa = PBXGroup;
 			children = (
+				D3B7811E1EAF3ED1008D544D /* InputSection.swift */,
 				D329CB641EADD6DC005D512E /* InputHolder.swift */,
 				D329CB661EADD8B6005D512E /* InputViewDetailValidatorType.swift */,
 				D329CB771EAE6A0B005D512E /* InputListViewDecoratorType.swift */,
 			);
 			name = model;
+			sourceTree = "<group>";
+		};
+		D3B781231EAF4797008D544D /* builder */ = {
+			isa = PBXGroup;
+			children = (
+				D3B781241EAF47B5008D544D /* InputViewHeaderBuilder.swift */,
+				D3B781261EAF494A008D544D /* InputViewHeaderIdentifierType.swift */,
+				D3B781281EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift */,
+				D3B7812A1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift */,
+			);
+			name = builder;
 			sourceTree = "<group>";
 		};
 		E2E60D295457799D6CF5A642 /* Frameworks */ = {
@@ -340,8 +363,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D329CB651EADD6DC005D512E /* InputHolder.swift in Sources */,
+				D3B7812B1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift in Sources */,
+				D3B7811F1EAF3ED1008D544D /* InputSection.swift in Sources */,
+				D3B781271EAF494A008D544D /* InputViewHeaderIdentifierType.swift in Sources */,
+				D3B781251EAF47B5008D544D /* InputViewHeaderBuilder.swift in Sources */,
 				D329CB671EADD8B6005D512E /* InputViewDetailValidatorType.swift in Sources */,
 				D329CB781EAE6A0B005D512E /* InputListViewDecoratorType.swift in Sources */,
+				D3B781291EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift in Sources */,
 				D329CB5A1EADBD77005D512E /* UIAdaptableInputListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

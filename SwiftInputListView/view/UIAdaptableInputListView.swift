@@ -40,7 +40,14 @@ public final class UIAdaptableInputListView: UICollectionView {
             inputs = Variable([])
             inputData = Set()
             super.init(view: view)
+            
+            // Disable scroll because we will be resizing this view to wrap
+            // all cells, including spacing and insets. Therefore, it is best
+            // to use it inside a UIScrollView.
+            view.isScrollEnabled = false
+            view.clipsToBounds = false
             view.register(with: UIInputCell.self)
+            view.register(with: UIInputHeader.self)
             view.dataSource = self
             view.delegate = self
             
@@ -127,15 +134,22 @@ public final class UIAdaptableInputListView: UICollectionView {
             let inputCount = inputs.flatMap({$0.inputHolders}).count
             let itemSpace = current?.itemSpacing ?? 0
             let sectionSpace = current?.sectionSpacing ?? 0
+            let sectionHeight = current?.sectionHeight ?? 0
             
             let height = inputs.totalHeight
-            let totalItemSpace = itemSpace * CGFloat(inputCount - 1)
-            let totalSectionSpace = sectionSpace * 2 * CGFloat(sectionCount - 1)
+            let totalIS = itemSpace * CGFloat(inputCount - 1)
+            let totalSS = sectionSpace * 2 * CGFloat(sectionCount - 1)
+            let totalSH = sectionHeight * CGFloat(sectionCount)
+            let totalHeight = height + totalIS + totalSS + totalSH
             
-            // When inputs are empty, height may be negative.
-            return Swift.max(height + totalItemSpace + totalSectionSpace, 0)
+            // When inputs are empty, height may be negative, so we default
+            // to 0 if that is the case.
+            return Swift.max(totalHeight, 0)
         }
         
+        /// Reload data for the current collection view.
+        ///
+        /// - Parameter view: A UICollectionView instance.
         func reloadData(for view: UICollectionView?) {
             view?.reloadData()
         }
@@ -163,9 +177,6 @@ public extension UIAdaptableInputListView {
     }
 }
 
-/// UICollectionViewCell subclass.
-final class UIInputCell: UICollectionViewCell {}
-
 // MARK: - UICollectionViewDataSource
 extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -186,10 +197,10 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath)
         -> UICollectionViewCell
     {
+        let cellClass = UIInputCell.self
+        
         guard
-            let cell = collectionView.dequeReusableCell(
-                with: UIInputCell.self,
-                for: indexPath),
+            let cell = collectionView.deque(with: cellClass, for: indexPath),
             let section = inputs.value.element(at: indexPath.section),
             let holder = section.inputHolders.element(at: indexPath.row)
         else {
@@ -205,7 +216,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         // We need to remove all views and constraints to prevent
         // duplicates, since cells are reused.
         contentView.subviews.forEach({$0.removeFromSuperview()})
-        contentView.constraints.forEach({contentView.removeConstraint($0)})
+        contentView.constraints.forEach(contentView.removeConstraint)
         contentView.addSubview(view)
         contentView.addFitConstraints(for: view)
         
@@ -233,6 +244,31 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        let viewClass = UIInputHeader.self
+        let inputs = self.inputs.value
+        
+        if
+            let view = collectionView.deque(with: viewClass, at: indexPath),
+            let section = inputs.element(at: indexPath.section)?.inputSection
+        {
+            // We need to remove all subviews and constraints in case cells
+            // are reused, leading to duplicate views.
+            view.subviews.forEach({$0.removeFromSuperview()})
+            view.constraints.forEach(view.removeConstraint)
+            
+            let builder = section.viewBuilder()
+            let config = section.viewConfig()
+            view.populateSubviews(with: builder)
+            config.configure(for: view)
+            return view
+        } else {
+            return UICollectionReusableView()
+        }
     }
 }
 
@@ -276,18 +312,47 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout
         }
         
         let width = collectionView.bounds.width
-        return CGSize(width: width, height: holder.largestHeight)
+        let height = holder.largestHeight
+        return CGSize(width: width, height: height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int)
+        -> CGSize
+    {
+        let width = collectionView.bounds.width
+        let height = sectionHeight ?? 0
+        return CGSize(width: width, height: height)
     }
 }
 
 // MARK: - InputListViewDecoratorType
 extension UIAdaptableInputListView.Presenter: InputListViewDecoratorType {
+    public var sectionHeight: CGFloat? {
+        // Only use header if there are more than 1 section.
+        guard inputs.value.count > 1 else { return 0 }
+        return decorator.value?.sectionHeight ?? Size.small.value
+    }
+    
     public var itemSpacing: CGFloat? {
         return decorator.value?.itemSpacing ?? Space.smaller.value
     }
     
     public var sectionSpacing: CGFloat? {
         return decorator.value?.sectionSpacing ?? Space.small.value
+    }
+}
+
+/// UICollectionViewCell subclass.
+final class UIInputCell: UICollectionViewCell {}
+
+/// UICollectionReusableView subclass
+final class UIInputHeader: UICollectionReusableView {}
+
+extension UIInputHeader: ReusableViewIdentifierType {
+    public static var kind: ReusableViewKind {
+        return .header
     }
 }
 

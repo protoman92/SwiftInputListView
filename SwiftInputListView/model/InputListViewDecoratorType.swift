@@ -17,4 +17,7 @@ public protocol InputListViewDecoratorType {
     
     /// This value will be used to separate consecutive sections.
     var sectionSpacing: CGFloat? { get }
+    
+    /// This value will be used to resize the header view.
+    var sectionHeight: CGFloat? { get }
 }

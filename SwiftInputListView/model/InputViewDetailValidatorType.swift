@@ -15,7 +15,6 @@ import SwiftUtilities
 /// It can be used both for view building and input validation.
 public protocol InputViewDetailValidatorType:
     InputViewDetailType,
-    InputViewDecoratorType,
     InputValidatorType {
     
     /// Each input may belong to a section. If there is only one section

@@ -10,16 +10,39 @@ import SwiftUtilities
 import UIKit
 
 /// Implement this protocol to provide section information.
-public protocol InputSectionType {
+public protocol InputSectionType: InputViewHeaderDecoratorType {
     
     /// Since we are not using Hashable for this protocol, we can use String
     /// values as keys.
     var identifier: String { get }
     
-    /// Initialize an InputSectionType with a raw String value. Usually we
-    /// could let a String enum implement this protocol so that this
-    /// initializer is automatically satisfied.
-    init?(rawValue: String)
+    /// The headerTitle UILabel will display this String value.
+    var header: String { get }
+    
+    /// Builder class type for dynamic construction of builders during
+    /// view building phase.
+    var viewBuilderType: InputViewHeaderBuilderType.Type { get }
+    
+    /// Configuration class type for dynamic construction of configuration
+    /// classes during config phase.
+    var viewConfigType: InputViewHeaderConfigType.Type { get }
+}
+
+public extension InputSectionType {
+
+    /// Get a view builder class for dynamic building.
+    ///
+    /// - Returns: An InputViewHeaderBuilderType instance.
+    public func viewBuilder() -> InputViewHeaderBuilderType {
+        return viewBuilderType.init(with: self)
+    }
+    
+    /// Get a view config class for configuration.
+    ///
+    /// - Returns: An InputViewHeaderConfigType instance.
+    public func viewConfig() -> InputViewHeaderConfigType {
+        return viewConfigType.init(with: self)
+    }
 }
 
 /// Implement this protocol to provide input section and holders.

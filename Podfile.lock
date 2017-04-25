@@ -6,14 +6,14 @@ PODS:
   - RxSwift (3.4.0)
   - RxTest (3.4.0):
     - RxSwift (~> 3.4)
-  - SwiftInputView (1.0.1):
-    - SwiftInputView/Main (= 1.0.1)
+  - SwiftInputView (1.0.2):
+    - SwiftInputView/Main (= 1.0.2)
     - SwiftPlaceholderTextView/Main
-  - SwiftInputView/Main (1.0.1):
+  - SwiftInputView/Main (1.0.2):
     - SwiftPlaceholderTextView/Main
   - SwiftPlaceholderTextView/Main (1.1.6):
     - SwiftUIUtilities/Main
-  - SwiftUIUtilities/Main (1.2.7):
+  - SwiftUIUtilities/Main (1.2.9):
     - SwiftUtilities/Main
   - SwiftUtilities/Main (1.3.7):
     - RxCocoa (~> 3.0)
@@ -39,9 +39,9 @@ SPEC CHECKSUMS:
   RxCocoa: d14ef6b6029e1ddc6e966508c09289090de68ff9
   RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
   RxTest: beb6beb882cf1dcac5fc9fdbd4760a5254e7f3a6
-  SwiftInputView: 3177b63655900f7f13538407184e9e95062e2e97
+  SwiftInputView: 82d46912f0936f68181cb5aeea36ac9980fe98bd
   SwiftPlaceholderTextView: 77850bab1c569d7663a21bceeaf70c6ac01e42e2
-  SwiftUIUtilities: 94a7f749d60f60703fe50eadb9d906baa4927538
+  SwiftUIUtilities: 86c598b671badd6aea84c41bd1450bf83d060ac4
   SwiftUtilities: 86922f1fde600d7e2f8d236e09098f717d0f1502
   SwiftUtilitiesTests: f1d9589b6444a7ac4b83981d020e2ef8782eea1a
 
