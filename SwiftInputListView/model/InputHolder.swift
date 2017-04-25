@@ -26,6 +26,14 @@ public extension InputHolderType {
     public var largestHeight: CGFloat {
         return inputDetails.flatMap({$0.inputViewHeight}).max() ?? 0
     }
+    
+    /// Get the associated section for all InputViewDetailValidatorType
+    /// instances. If there are different sections among the inputs, take
+    /// only the first one i.e. we are assuming all inputs share the same
+    /// section (as it should be).
+    public var section: InputSectionType? {
+        return inputs.first?.section
+    }
 }
 
 /// Use this struct to carry InputViewDetailValidatorType instances, instead 
@@ -122,3 +130,45 @@ public extension InputHolder {
 }
 
 extension InputHolder: InputHolderType {}
+
+public extension Sequence where Iterator.Element == InputHolderType {
+    
+    /// Get an Array of InputSectionHolderType, based on each InputHolderType's
+    /// inputSection.
+    public var inputSectionHolders: [InputSectionHolderType] {
+        var sectionHolders = [InputSectionHolderType]()
+        let sections = self.flatMap({$0.section})
+        
+        for section in sections {
+            // There might be duplicate sections, so we skip if a section
+            // has already been added.
+            guard !sectionHolders.contains(where: {
+                $0.inputSection.identifier == section.identifier
+            }) else {
+                continue
+            }
+            
+            let holders = filter({
+                $0.section?.identifier == section.identifier
+            })
+            
+            let sectionHolder = InputSectionHolder
+                .builder(with: section)
+                .with(holders: holders)
+                .build()
+            
+            sectionHolders.append(sectionHolder)
+        }
+        
+        return sectionHolders
+    }
+}
+
+public extension Sequence where Iterator.Element: InputHolderType {
+    
+    /// Same as above, but we need to map each instance to an InputHolderType
+    /// first.
+    public var inputSectionHolders: [InputSectionHolderType] {
+        return self.map({$0 as InputHolderType}).inputSectionHolders
+    }
+}

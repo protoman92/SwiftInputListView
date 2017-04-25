@@ -16,4 +16,9 @@ import SwiftUtilities
 public protocol InputViewDetailValidatorType:
     InputViewDetailType,
     InputViewDecoratorType,
-    InputValidatorType {}
+    InputValidatorType {
+    
+    /// Each input may belong to a section. If there is only one section
+    /// for all inputs, ignore.
+    var section: InputSectionType { get }
+}

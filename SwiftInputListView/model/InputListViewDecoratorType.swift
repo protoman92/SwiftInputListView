@@ -14,4 +14,7 @@ public protocol InputListViewDecoratorType {
     
     /// This value will be used to separate consecutive cells.
     var itemSpacing: CGFloat? { get }
+    
+    /// This value will be used to separate consecutive sections.
+    var sectionSpacing: CGFloat? { get }
 }

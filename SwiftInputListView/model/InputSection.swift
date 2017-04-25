@@ -15,6 +15,11 @@ public protocol InputSectionType {
     /// Since we are not using Hashable for this protocol, we can use String
     /// values as keys.
     var identifier: String { get }
+    
+    /// Initialize an InputSectionType with a raw String value. Usually we
+    /// could let a String enum implement this protocol so that this
+    /// initializer is automatically satisfied.
+    init?(rawValue: String)
 }
 
 /// Implement this protocol to provide input section and holders.
@@ -133,5 +138,14 @@ public extension InputSectionHolder {
     /// - Returns: A Builder instance.
     public static func builder(with section: InputSectionType) -> Builder {
         return Builder(with: section)
+    }
+}
+
+public extension Sequence where Iterator.Element == InputSectionHolderType {
+    
+    /// Get the total height, based on the largestHeight of each 
+    /// InputHolderType.
+    public var totalHeight: CGFloat {
+        return flatMap({$0.inputHolders}).map({$0.largestHeight}).reduce(0, +)
     }
 }
