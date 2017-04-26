@@ -41,6 +41,10 @@ extension InputDetail: TextInputViewDetailType {
     public var identifier: String { return String(describing: self) }
     public var isRequired: Bool { return true }
     
+    public var decorator: InputViewDecoratorType {
+        return InputViewDecorator(for: self)
+    }
+    
     public var inputType: InputType {
         switch self {
         case .description:
@@ -83,20 +87,6 @@ extension InputDetail: TextInputViewDetailType {
         case .phoneNumber:
             return "Phone number"
         }
-    }
-    
-    public var inputViewWidth: CGFloat? {
-        switch self {
-        case .title, .phoneExtension:
-            return Size.larger.value
-            
-        default:
-            return nil
-        }
-    }
-    
-    public var inputViewHeight: CGFloat? {
-        return textInputType?.suggestedInputHeight
     }
     
     public var shouldDisplayRequiredIndicator: Bool {
@@ -183,20 +173,35 @@ extension InputDetail: InputValidatorType {
     }
 }
 
-extension InputDetail: TextInputViewDecoratorType {
-    public var configComponentType: InputViewConfigComponentType.Type? {
-        return nil
+class InputViewDecorator: TextInputViewDecoratorType {
+    fileprivate let input: InputViewDetailValidatorType
+    
+    public init(for input: InputViewDetailValidatorType) {
+        self.input = input
     }
     
-    public var inputBackgroundColor: UIColor? { return .gray }
-    public var inputCornerRadius: CGFloat? { return 5 }
-    public var inputTextColor: UIColor? { return .white }
-    public var inputTintColor: UIColor? { return .white }
-    public var inputTextAlignment: NSTextAlignment? { return .natural }
-    public var horizontalSpacing: CGFloat? { return nil }
-    public var requiredIndicatorTextColor: UIColor? { return .white }
-    public var requiredIndicatorText: String? { return "*R" }
-    public var placeholderTextColor: UIColor? { return .lightGray }
+    public var inputViewWidth: CGFloat {
+        switch input as? InputDetail {
+        case .some(.title), .some(.phoneExtension):
+            return Size.larger.value ?? 0
+            
+        default:
+            return 0
+        }
+    }
+    
+    public var inputViewHeight: CGFloat {
+        return input.textInputType?.suggestedInputHeight ?? 0
+    }
+    
+    public var inputBackgroundColor: UIColor { return .gray }
+    public var inputCornerRadius: CGFloat { return 5 }
+    public var inputTextColor: UIColor { return .white }
+    public var inputTintColor: UIColor { return .white }
+    public var inputTextAlignment: NSTextAlignment { return .natural }
+    public var requiredIndicatorTextColor: UIColor { return .white }
+    public var requiredIndicatorText: String { return "*R" }
+    public var placeholderTextColor: UIColor { return .lightGray }
 }
 
 extension InputDetail: InputViewDetailValidatorType {
