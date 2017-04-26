@@ -109,8 +109,8 @@ extension InputDetail: TextInputViewDetailType {
         }
     }
     
-    public var viewBuilderComponentType: InputViewBuilderComponentType.Type {
-        return TextInputViewBuilderComponent.self
+    public var viewBuilderComponentType: InputViewBuilderComponentType.Type? {
+        return nil
     }
 }
 
@@ -184,22 +184,15 @@ extension InputDetail: InputValidatorType {
 }
 
 extension InputDetail: TextInputViewDecoratorType {
-    public var configComponentType: InputViewConfigComponentType.Type {
-        return TextInputViewConfigComponent.self
+    public var configComponentType: InputViewConfigComponentType.Type? {
+        return nil
     }
     
     public var inputBackgroundColor: UIColor? { return .gray }
     public var inputCornerRadius: CGFloat? { return 5 }
     public var inputTextColor: UIColor? { return .white }
     public var inputTintColor: UIColor? { return .white }
-    
-    public var inputTextAlignment: NSTextAlignment? {
-        switch self {
-        default:
-            return .natural
-        }
-    }
-    
+    public var inputTextAlignment: NSTextAlignment? { return .natural }
     public var horizontalSpacing: CGFloat? { return nil }
     public var requiredIndicatorTextColor: UIColor? { return .white }
     public var requiredIndicatorText: String? { return "*R" }

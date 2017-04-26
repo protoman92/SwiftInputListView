@@ -21,11 +21,11 @@ public protocol InputSectionType: InputViewHeaderDecoratorType {
     
     /// Builder class type for dynamic construction of builders during
     /// view building phase.
-    var viewBuilderType: InputViewHeaderBuilderType.Type { get }
+    var viewBuilderType: InputViewHeaderBuilderType.Type? { get }
     
     /// Configuration class type for dynamic construction of configuration
     /// classes during config phase.
-    var viewConfigType: InputViewHeaderConfigType.Type { get }
+    var viewConfigType: InputViewHeaderConfigType.Type? { get }
 }
 
 public extension InputSectionType {
@@ -34,14 +34,16 @@ public extension InputSectionType {
     ///
     /// - Returns: An InputViewHeaderBuilderType instance.
     public func viewBuilder() -> InputViewHeaderBuilderType {
-        return viewBuilderType.init(with: self)
+        let type = (viewBuilderType ?? InputViewHeaderBuilder.self)
+        return type.init(with: self)
     }
     
     /// Get a view config class for configuration.
     ///
     /// - Returns: An InputViewHeaderConfigType instance.
     public func viewConfig() -> InputViewHeaderConfigType {
-        return viewConfigType.init(with: self)
+        let type = (viewConfigType ?? InputViewHeaderBuilderConfig.self)
+        return type.init(with: self)
     }
 }
 

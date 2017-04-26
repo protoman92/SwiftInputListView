@@ -6,11 +6,11 @@ PODS:
   - RxSwift (3.4.0)
   - RxTest (3.4.0):
     - RxSwift (~> 3.4)
-  - SwiftInputView (1.0.5):
-    - SwiftInputView/Main (= 1.0.5)
+  - SwiftInputView (1.0.6):
+    - SwiftInputView/Main (= 1.0.6)
     - SwiftPlaceholderTextView/Main
     - SwiftReactiveTextField/Main
-  - SwiftInputView/Main (1.0.5):
+  - SwiftInputView/Main (1.0.6):
     - SwiftPlaceholderTextView/Main
     - SwiftReactiveTextField/Main
   - SwiftPlaceholderTextView/Main (1.1.9):
@@ -43,7 +43,7 @@ SPEC CHECKSUMS:
   RxCocoa: d14ef6b6029e1ddc6e966508c09289090de68ff9
   RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
   RxTest: beb6beb882cf1dcac5fc9fdbd4760a5254e7f3a6
-  SwiftInputView: d7b4f526357b486745be3c42cb7ed2b1c6e6229b
+  SwiftInputView: a8cd6895478dfe62f851bfd3dd6eefe50de49b11
   SwiftPlaceholderTextView: bd47218eb9adaefdf21d5b38fd2eae136024ab28
   SwiftReactiveTextField: e219e42256a5bd28f8e4cf2cc2758d7749283661
   SwiftUIUtilities: 2ec0c7c2329ba4e26e46f94e9bfcd31be5d66dce

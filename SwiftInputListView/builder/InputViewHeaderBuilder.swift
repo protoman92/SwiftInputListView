@@ -46,8 +46,14 @@ open class InputViewHeaderBuilder {
         label.accessibilityIdentifier = headerTitleId
         label.text = section.header
         
-        let constraints = FitConstraintSet
-            .fit(forParent: view, andChild: label)
+        let constraints = FitConstraintSet.builder()
+            .with(parent: view)
+            .with(child: label)
+            .add(left: true, withMargin: Space.small.value)
+            .add(right: true)
+            .add(top: true)
+            .add(bottom: true)
+            .build()
             .constraints
         
         return ViewBuilderComponent.builder()

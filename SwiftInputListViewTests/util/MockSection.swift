@@ -16,6 +16,8 @@ public enum InputSection: String {
 }
 
 extension InputSection: InputSectionType {
+    public var viewBuilderType: InputViewHeaderBuilderType.Type? { return nil }
+    public var viewConfigType: InputViewHeaderConfigType.Type? { return nil }
     public var identifier: String { return rawValue }
     
     public var header: String {
@@ -29,14 +31,6 @@ extension InputSection: InputSectionType {
         case .accountInformation:
             return "Account information"
         }
-    }
-    
-    public var viewBuilderType: InputViewHeaderBuilderType.Type {
-        return InputViewHeaderBuilder.self
-    }
-    
-    public var viewConfigType: InputViewHeaderConfigType.Type {
-        return InputViewHeaderBuilderConfig.self
     }
 }
 
