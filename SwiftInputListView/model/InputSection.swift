@@ -55,6 +55,15 @@ public protocol InputSectionHolderType {
     var inputHolders: [InputHolderType] { get }
     
     init(with section: InputSectionType)
+    
+    /// Get the index at which an InputViewDetailValidatorType instance is
+    /// found.
+    ///
+    /// - Parameter input: An InputViewDetailValidatorType instance.
+    /// - Returns: An optional tuple of (Int, Int), representing the index
+    ///            of the containing input holder, and the index of the
+    ///            input item within that input holder.
+    func index(for input: InputViewDetailValidatorType) -> (Int, Int)?
 }
 
 /// Each instance of this struct represents a section for 
@@ -152,6 +161,23 @@ extension InputSectionHolder: InputSectionHolderType {
     public var inputHolders: [InputHolderType] {
         return holders
     }
+    
+    /// We need to enumerate the holders Array, after which we enumerate each
+    /// holder.
+    ///
+    /// - Parameter input: An InputViewDetailValidatorType instance.
+    /// - Returns: A (Int, Int) tuple.
+    public func index(for input: InputViewDetailValidatorType) -> (Int, Int)? {
+        for (holderIndex, holder) in inputHolders.enumerated() {
+            for (inputIndex, stored) in holder.inputs.enumerated() {
+                if input.identifier == stored.identifier {
+                    return (holderIndex, inputIndex)
+                }
+            }
+        }
+        
+        return nil
+    }
 }
 
 public extension InputSectionHolder {
@@ -170,5 +196,26 @@ public extension Sequence where Iterator.Element == InputSectionHolderType {
     /// InputHolderType.
     public var totalHeight: CGFloat {
         return flatMap({$0.inputHolders}).map({$0.largestHeight}).reduce(0, +)
+    }
+    
+    /// Return the index at which an InputViewDetailValidatorType is
+    /// found.
+    ///
+    /// - Parameter input: An InputViewDetailValidatorType instance.
+    /// - Returns: An optional (Int, Int, Int) tuple. The first index is
+    ///            the section holder's index within the Array, the second
+    ///            index is the input holder's index within the section holder,
+    ///            and the third one is the input's index within the input
+    ///            holder.
+    public func index(for input: InputViewDetailValidatorType) -> (Int, Int, Int)? {
+        for (index, holder) in enumerated() {
+            guard let holderIndex = holder.index(for: input) else {
+                continue
+            }
+            
+            return (index, holderIndex.0, holderIndex.1)
+        }
+        
+        return nil
     }
 }

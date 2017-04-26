@@ -13,6 +13,20 @@ import SwiftUtilities
 import SwiftUIUtilities
 import UIKit
 
+/// Implement this protocol to provide delegation for UIAdapterInputListView.
+public protocol UIAdaptableInputListViewDelegate: class {
+    
+    /// Provide default input for an InputViewDetailType instance.
+    ///
+    /// - Parameters:
+    ///   - inputListView: The current UIAdaptableInputListView instance.
+    ///   - input: An InputViewDetailType instance.
+    /// - Returns: A String value.
+    func inputListView(_ inputListView: UIAdaptableInputListView,
+                       defaultValueFor input: InputViewDetailValidatorType)
+        -> String?
+}
+
 /// This collection view combines InputData and UIAdaptableInputView and
 /// automatically handles validation etc. As a result, it can handle multiple
 /// input types, such as text/choice etc.
@@ -30,10 +44,17 @@ public final class UIAdaptableInputListView: UICollectionView {
         /// data source.
         fileprivate var inputs: Variable<[InputSectionHolderType]>
         
+        fileprivate weak var delegate: UIAdaptableInputListViewDelegate?
+        
         /// For each
         fileprivate var inputData: Set<InputData>
         
         fileprivate let disposeBag = DisposeBag()
+        
+        /// We need a separate DisposeBag for text observers, so that when
+        /// new InputData instances are created, we can simply reassign this
+        /// variables to allow old disposables to terminate.
+        fileprivate var inputDataDisposeBag = DisposeBag()
         
         init(view: UIAdaptableInputListView) {
             decorator = Variable(nil)
@@ -56,7 +77,12 @@ public final class UIAdaptableInputListView: UICollectionView {
                 .subscribe()
                 .addDisposableTo(disposeBag)
             
+            // When inputs are changed, dispose of all old Disposables,
+            // adjust height and reload view.
             inputs.asObservable()
+                .doOnNext({[weak self] _ in
+                    self?.resetInputDataDisposeBag(with: self)
+                })
                 .doOnNext({[weak self] in
                     self?.updateData(with: $0, with: self)
                 })
@@ -68,6 +94,13 @@ public final class UIAdaptableInputListView: UICollectionView {
                 })
                 .subscribe()
                 .addDisposableTo(disposeBag)
+        }
+        
+        /// Reassign the inputDataDisposeBag variable to clear old disposables.
+        ///
+        /// - Parameter current: The current Presenter instance.
+        func resetInputDataDisposeBag(with current: Presenter?) {
+            current?.inputDataDisposeBag = DisposeBag()
         }
         
         /// When inputs change, we need to update all InputData instances as
@@ -82,7 +115,7 @@ public final class UIAdaptableInputListView: UICollectionView {
                 return
             }
             
-            let disposeBag = current.disposeBag
+            let disposeBag = current.inputDataDisposeBag
             
             let inputData = inputs
                 .flatMap({$0.inputHolders})
@@ -170,10 +203,124 @@ public extension UIAdaptableInputListView {
         return presenter.inputData
     }
     
+    /// Expose this to allow external observers.
+    public var inputsObservable: Observable<[InputSectionHolderType]> {
+        return presenter.inputs.asObservable()
+    }
+    
     /// When decorator is set, this view will be reloaded.
     public var decorator: InputListViewDecoratorType? {
         get { return presenter.decorator.value }
         set { presenter.decorator.value = newValue }
+    }
+    
+    /// When delegate is set, pass it to presenter.
+    public var inputListViewDelegate: UIAdaptableInputListViewDelegate? {
+        get { return presenter.delegate }
+        set { presenter.delegate = newValue }
+    }
+}
+
+// MARK: - Access input fields.
+extension UIAdaptableInputListView.Presenter {
+    
+    /// Get the inputField that corresponds to an InputViewDetailValidatorType
+    /// instance. We do this by traversing the InputSectionHolderType Array
+    /// to get an index tuple of (Int, Int, Int), construct an IndexPath
+    /// from the first 2 indexes, get the appropriate UICollectionViewCell
+    /// and then query its subviews for the inputField.
+    ///
+    /// - Parameters:
+    ///   - input: An InputViewDetailValidatorType instance.
+    ///   - view: The current UIAdaptableInputListView instance.
+    /// - Returns: An optional InputFieldType instance.
+    func inputField(for input: InputViewDetailValidatorType,
+                    with view: UIAdaptableInputListView) -> InputFieldType? {
+        guard
+            let i = inputs.value.index(for: input),
+            let cell = view.cellForItem(at: IndexPath(row: i.0, section: i.1)),
+            let inputView = cell.firstSubview(ofType: UIAdaptableInputView.self),
+            let inputField = inputView.inputFields.element(at: i.2)
+        else {
+            debugException()
+            return nil
+        }
+        
+        return inputField
+    }
+    
+    /// Clear input for an InputViewDetailValidatorType instance.
+    ///
+    /// - Parameters:
+    ///   - input: An InputViewDetailValidatorType instance.
+    ///   - view: The current UIAdaptableInputListView instance.
+    /// - Returns: A Bool value that represent whether the operation succeeded.
+    @discardableResult
+    func clearValue(for input: InputViewDetailValidatorType,
+                    with view: UIAdaptableInputListView) -> Bool {
+        return enterValue(for: input, with: nil, with: view)
+    }
+    
+    /// Enter input for an InputViewDetailValidatorType instance.
+    ///
+    /// - Parameters:
+    ///   - input: An InputViewDetailValidatorType instance.
+    ///   - value: An optional String value.
+    ///   - view: The current UIAdaptableInputListView instance.
+    /// - Returns: A Bool value that represents whether the operation succeeded.
+    @discardableResult
+    func enterValue(for input: InputViewDetailValidatorType,
+                    with value: String?,
+                    with view: UIAdaptableInputListView) -> Bool {
+        guard let inputField = inputField(for: input, with: view) else {
+            return false
+        }
+        
+        inputField.text = value
+        return true
+    }
+    
+    /// Clear all inputs.
+    ///
+    /// - Parameter view: The current UIAdaptableInputListView instance.
+    func clearAllValues(with view: UIAdaptableInputListView) {
+        view.allSubviews(ofType: InputFieldType.self).forEach({$0.text = nil})
+    }
+}
+
+public extension UIAdaptableInputListView {
+    
+    /// Get all inputFields.
+    ///
+    /// - Returns: An Array of InputFieldType instances.
+    public func inputFields() -> [InputFieldType] {
+        return allSubviews(ofType: InputFieldType.self)
+    }
+    
+    /// Clear input for an InputViewDetailValidatorType instance.
+    ///
+    /// - Parameter input: An InputViewDetailValidatorType instance.
+    /// - Returns: A Bool value that represents whether the operation succeeded.
+    @discardableResult
+    public func clearValue(for input: InputViewDetailValidatorType) -> Bool {
+        return presenter.clearValue(for: input, with: self)
+    }
+    
+    /// Clear input for an InputViewDetailValidatorType instance.
+    public func clearAllValues() {
+        presenter.clearAllValues(with: self)
+    }
+    
+    /// Enter input for an InputViewDetailValidatorType instance.
+    ///
+    /// - Parameters:
+    ///   - input: An InputViewDetailValidatorType instance.
+    ///   - value: An optional String value.
+    /// - Returns: A Bool value that represents whether the operation succeeded.
+    @discardableResult
+    func enterValue(for input: InputViewDetailValidatorType,
+                    with value: String?) -> Bool {
+        return presenter.enterValue(for: input, with: value, with: self)
     }
 }
 
@@ -200,6 +347,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         let cellClass = UIInputCell.self
         
         guard
+            let view = collectionView as? UIAdaptableInputListView,
             let cell = collectionView.deque(with: cellClass, for: indexPath),
             let section = inputs.value.element(at: indexPath.section),
             let holder = section.inputHolders.element(at: indexPath.row)
@@ -210,24 +358,23 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         
         let builder = InputViewBuilder(from: holder.inputDetails)
         let config = InputViewBuilderConfig(from: holder.inputDecorators)
-        let view = UIAdaptableInputView(with: builder, and: config)
+        let inputView = UIAdaptableInputView(with: builder, and: config)
         let contentView = cell.contentView
         
         // We need to remove all views and constraints to prevent
         // duplicates, since cells are reused.
         contentView.subviews.forEach({$0.removeFromSuperview()})
         contentView.constraints.forEach(contentView.removeConstraint)
-        contentView.addSubview(view)
-        contentView.addFitConstraints(for: view)
+        contentView.addSubview(inputView)
+        contentView.addFitConstraints(for: inputView)
         
         // Let inputData listen to text changes. We need to find the
         // right inputData that corresponds the an InputFieldType instance.
         let inputData = self.inputData
-        let disposeBag = self.disposeBag
+        let disposeBag = self.inputDataDisposeBag
         
-        for (index, inputField) in view.inputFields.enumerated() {
+        for (index, inputField) in inputView.inputFields.enumerated() {
             guard
-                let textObs = inputField.rxText?.asObservable(),
                 let input = holder.inputs.element(at: index),
                 let data = inputData.filter({
                     $0.inputIdentifier == input.identifier
@@ -237,10 +384,20 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
                 continue
             }
             
-            textObs.map({$0 ?? ""})
+            inputField.rxText.asObservable()
+                .map({$0 ?? ""})
                 .doOnNext({[weak data] in data?.onNext($0)})
                 .subscribe()
                 .addDisposableTo(disposeBag)
+            
+            // We set default value after setting up text observers in order
+            // to emit it. Only set default value if it is available.
+            if
+                let delegate = self.delegate,
+                let value = delegate.inputListView(view, defaultValueFor: input)
+            {
+                inputField.text = value
+            }
         }
         
         return cell

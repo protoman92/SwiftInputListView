@@ -40,7 +40,7 @@ open class InputViewHeaderBuilder {
     open func headerTitle(for view: UIView, using section: InputSectionType)
         -> ViewBuilderComponentType
     {
-        let label = BaseLabel()
+        let label = UIBaseLabel()
         label.fontName = String(describing: 1)
         label.fontSize = String(describing: 5)
         label.accessibilityIdentifier = headerTitleId
