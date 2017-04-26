@@ -1,0 +1,222 @@
+//
+//  MockInput.swift
+//  SwiftInputListView
+//
+//  Created by Hai Pham on 4/26/17.
+//  Copyright © 2017 Swiften. All rights reserved.
+//
+
+import SwiftInputView
+import SwiftUtilities
+import SwiftUIUtilities
+import SwiftInputListView
+
+public enum InputDetail {
+    case title
+    case firstName
+    case lastName
+    case phoneExtension
+    case phoneNumber
+    case email
+    case password
+    case confirmPassword
+    case description
+    
+    public static var allValues: [InputDetail] {
+        return [
+            title,
+            firstName,
+            lastName,
+            phoneExtension,
+            phoneNumber,
+            email,
+            password,
+            confirmPassword,
+            description
+        ]
+    }
+}
+
+extension InputDetail: TextInputViewDetailType {
+    public var identifier: String { return String(describing: self) }
+    public var isRequired: Bool { return true }
+    
+    public var inputType: InputType {
+        switch self {
+        case .description:
+            return TextInput.description
+            
+        case .password, .confirmPassword:
+            return TextInput.password
+            
+        default:
+            return TextInput.default
+        }
+    }
+    
+    public var placeholder: String? {
+        switch self {
+        case .title:
+            return "Title"
+            
+        case .firstName:
+            return "First name"
+            
+        case .lastName:
+            return "Last name"
+            
+        case .password:
+            return "Password"
+            
+        case .confirmPassword:
+            return "Confirm password"
+            
+        case .email:
+            return "Email"
+            
+        case .description:
+            return "About yourself"
+            
+        case .phoneExtension:
+            return "Ext"
+            
+        case .phoneNumber:
+            return "Phone number"
+        }
+    }
+    
+    public var inputViewWidth: CGFloat? {
+        switch self {
+        case .title, .phoneExtension:
+            return Size.larger.value
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var inputViewHeight: CGFloat? {
+        return textInputType?.suggestedInputHeight
+    }
+    
+    public var shouldDisplayRequiredIndicator: Bool {
+        switch self {
+        case .title, .phoneExtension:
+            return false
+            
+        default:
+            return true
+        }
+    }
+    
+    public var viewBuilderComponentType: InputViewBuilderComponentType.Type {
+        return TextInputViewBuilderComponent.self
+    }
+}
+
+public extension InputDetail {
+    public static var inputs = [
+        [InputDetail.title, .firstName, .lastName],
+        [InputDetail.password],
+        [InputDetail.confirmPassword],
+        [InputDetail.email],
+        [InputDetail.phoneExtension, .phoneNumber],
+        [InputDetail.description]
+    ]
+    
+    public static var inputHolders = InputDetail.inputs.map({
+        InputHolder.builder().with(inputs: $0).build()
+    })
+    
+    public static var randomInputs: [[InputViewDetailValidatorType]] {
+        let count = self.inputs.count
+        let elementCount = Int.random(0, count)
+        return self.inputs.randomize(elementCount)
+    }
+    
+    public static var randomInputHolders: [InputHolderType] {
+        let count = self.inputHolders.count
+        let elementCount = Int.random(0, count)
+        return self.inputHolders.randomize(elementCount)
+    }
+    
+    public static var randomInputSectionHolders: [InputSectionHolderType] {
+        return self.randomInputHolders.inputSectionHolders
+    }
+}
+
+extension InputDetail: InputValidatorType {
+    public func validate<S: Sequence>(input: InputDataType, against inputs: S)
+        throws where S.Iterator.Element: InputDataType
+    {
+        let content = input.inputContent
+        
+        switch self {
+        case .title:
+            if !(["Mr", "Mrs", "Ms"].contains(content)) {
+                throw Exception("Invalid title")
+            }
+            
+        case .email:
+            if !content.isEmail {
+                throw Exception("Not an email")
+            }
+            
+        case .password:
+            if content.characters.count < 8 {
+                throw Exception("Password too short")
+            }
+            
+        case .confirmPassword:
+            guard
+                let password = inputs.filter({
+                    $0.inputIdentifier == InputDetail.password.identifier
+                }).first?.inputContent,
+                content == password
+            else {
+                throw Exception("Passwords do not match")
+            }
+            
+        default:
+            break
+        }
+    }
+}
+
+extension InputDetail: TextInputViewDecoratorType {
+    public var configComponentType: InputViewConfigComponentType.Type {
+        return TextInputViewConfigComponent.self
+    }
+    
+    public var inputBackgroundColor: UIColor? { return .gray }
+    public var inputCornerRadius: CGFloat? { return 5 }
+    public var inputTextColor: UIColor? { return .white }
+    public var inputTintColor: UIColor? { return .white }
+    
+    public var inputTextAlignment: NSTextAlignment? {
+        switch self {
+        default:
+            return .natural
+        }
+    }
+    
+    public var horizontalSpacing: CGFloat? { return nil }
+    public var requiredIndicatorTextColor: UIColor? { return .white }
+    public var requiredIndicatorText: String? { return "*R" }
+    public var placeholderTextColor: UIColor? { return .lightGray }
+}
+
+extension InputDetail: InputViewDetailValidatorType {
+    public var section: InputSectionType {
+        switch self {
+        case .firstName, .lastName, .title, .description:
+            return InputSection.personalInformation
+            
+        case .phoneExtension, .phoneNumber, .email:
+            return InputSection.contactInformation
+            
+        case .password, .confirmPassword:
+            return InputSection.accountInformation
+        }
+    }
+}
