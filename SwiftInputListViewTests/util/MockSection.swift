@@ -42,4 +42,6 @@ public struct InputListViewDecorator: InputListViewDecoratorType {
     public var sectionHeight: CGFloat? { return nil }
     public var sectionSpacing: CGFloat? { return nil }
     public var itemSpacing: CGFloat? { return nil }
+    
+    public init() {}
 }
