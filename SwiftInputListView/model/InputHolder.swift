@@ -23,9 +23,7 @@ public protocol InputHolderType {
 
 public extension InputHolderType {
     /// Get the largest height, based on all stored InputViewDetailType.
-    public var largestHeight: CGFloat {
-        return inputDetails.flatMap({$0.decorator.inputHeight}).max() ?? 0
-    }
+    public var largestHeight: CGFloat { return inputDetails.largestHeight }
     
     /// Get the associated section for all InputViewDetailValidatorType
     /// instances. If there are different sections among the inputs, take

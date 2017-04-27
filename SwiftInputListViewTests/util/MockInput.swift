@@ -98,6 +98,18 @@ extension InputDetail: TextInputViewDetailType {
         }
     }
     
+    public var inputWidth: CGFloat? {
+        switch self {
+        case .title, .phoneExtension:
+            return Size.larger.value ?? 0
+            
+        default:
+            return 0
+        }
+    }
+    
+    public var inputHeight: CGFloat? { return nil }
+    
     public var viewBuilderComponentType: InputViewBuilderComponentType.Type? {
         return nil
     }
@@ -177,20 +189,6 @@ class InputViewDecorator: TextInputViewDecoratorType {
     
     public init(for input: InputViewDetailValidatorType) {
         self.input = input
-    }
-    
-    public var inputViewWidth: CGFloat {
-        switch input as? InputDetail {
-        case .some(.title), .some(.phoneExtension):
-            return Size.larger.value ?? 0
-            
-        default:
-            return 0
-        }
-    }
-    
-    public var inputViewHeight: CGFloat {
-        return input.textInputType?.suggestedInputHeight ?? 0
     }
     
     public var inputBackgroundColor: UIColor { return .gray }
