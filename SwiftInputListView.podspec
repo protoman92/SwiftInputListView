@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     end
 
     s.subspec 'Test' do |test|
-        test = "{SwiftInputListView, SwiftInputListViewTests/util}/**/*.{swift}"
+        test.source_files = "{SwiftInputListView, SwiftInputListViewTests/util}/**/*.{swift}"
     end
 
 end
