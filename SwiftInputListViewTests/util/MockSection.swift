@@ -7,7 +7,6 @@
 //
 
 import SwiftInputView
-import SwiftInputListView
 
 public enum InputSection: String {
     case personalInformation

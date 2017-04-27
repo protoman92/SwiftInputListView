@@ -16,7 +16,6 @@ import RxTest
 import RxBlocking
 import UIKit
 import XCTest
-@testable import SwiftInputListView
 
 typealias Presenter = UIAdaptableInputListView.Presenter
 

@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
     s.name = "SwiftInputListView"
     s.summary = "UICollectionView subclass that combines InputData and UIAdaptableInputView."
     s.requires_arc = true
-    s.version = "1.0.4"
+    s.version = "1.0.5"
     s.license = { :type => "Apache-2.0", :file => "LICENSE" }
     s.author = { "Hai Pham" => "swiften.svc@gmail.com" }
     s.homepage = "https://github.com/protoman92/SwiftInputListView.git"
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     end
 
     s.subspec 'Test' do |test|
-        test.source_files = "{SwiftInputListView, SwiftInputListViewTests/util}/**/*.{swift}"
+        test.source_files = "SwiftInputListView/**/*.{swift}", "SwiftInputListViewTests/util/**/*.{swift}"
     end
 
 end
