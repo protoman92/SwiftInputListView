@@ -26,7 +26,6 @@
 		D3C02F591EB07D4A00DE3AF5 /* MockSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C02F581EB07D4A00DE3AF5 /* MockSection.swift */; };
 		D3C02F5D1EB0FDCF00DE3AF5 /* pod-publish in Resources */ = {isa = PBXBuildFile; fileRef = D3C02F5A1EB0FDCF00DE3AF5 /* pod-publish */; };
 		D3C02F5E1EB0FDCF00DE3AF5 /* SwiftInputListView.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D3C02F5B1EB0FDCF00DE3AF5 /* SwiftInputListView.podspec */; };
-		D3C02F7D1EB1071E00DE3AF5 /* SwiftInputListViewTests.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D3C02F7C1EB1071E00DE3AF5 /* SwiftInputListViewTests.podspec */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,7 +62,6 @@
 		D3C02F581EB07D4A00DE3AF5 /* MockSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSection.swift; path = util/MockSection.swift; sourceTree = "<group>"; };
 		D3C02F5A1EB0FDCF00DE3AF5 /* pod-publish */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "pod-publish"; sourceTree = "<group>"; };
 		D3C02F5B1EB0FDCF00DE3AF5 /* SwiftInputListView.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SwiftInputListView.podspec; sourceTree = "<group>"; };
-		D3C02F7C1EB1071E00DE3AF5 /* SwiftInputListViewTests.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SwiftInputListViewTests.podspec; sourceTree = "<group>"; };
 		D9C402CE96FA95F82152C34E /* Pods-SwiftInputListView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListView.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListView/Pods-SwiftInputListView.release.xcconfig"; sourceTree = "<group>"; };
 		E97AA8BA9E88EAA4A23CE7E3 /* Pods-SwiftInputListViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ECFE82123D58D7DFE476EEE9 /* Pods-SwiftInputListViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftInputListViewTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftInputListViewTests/Pods-SwiftInputListViewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -105,7 +103,6 @@
 		D329CB351EADBC31005D512E = {
 			isa = PBXGroup;
 			children = (
-				D3C02F7C1EB1071E00DE3AF5 /* SwiftInputListViewTests.podspec */,
 				D3C02F5A1EB0FDCF00DE3AF5 /* pod-publish */,
 				D3C02F5B1EB0FDCF00DE3AF5 /* SwiftInputListView.podspec */,
 				D329CB411EADBC32005D512E /* SwiftInputListView */,
@@ -308,7 +305,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3C02F5D1EB0FDCF00DE3AF5 /* pod-publish in Resources */,
-				D3C02F7D1EB1071E00DE3AF5 /* SwiftInputListViewTests.podspec in Resources */,
 				D3C02F5E1EB0FDCF00DE3AF5 /* SwiftInputListView.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
