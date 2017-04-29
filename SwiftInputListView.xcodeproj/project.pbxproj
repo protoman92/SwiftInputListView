@@ -62,7 +62,6 @@
 		D3B781261EAF494A008D544D /* InputViewHeaderIdentifierType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderIdentifierType.swift; path = builder/InputViewHeaderIdentifierType.swift; sourceTree = "<group>"; };
 		D3B781281EAF49E8008D544D /* InputViewHeaderBuilderConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderBuilderConfig.swift; path = builder/InputViewHeaderBuilderConfig.swift; sourceTree = "<group>"; };
 		D3B7812A1EAF4AE0008D544D /* InputViewHeaderDecoratorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputViewHeaderDecoratorType.swift; path = model/InputViewHeaderDecoratorType.swift; sourceTree = "<group>"; };
-		D3C02F4F1EB076FC00DE3AF5 /* SwiftInputListViewTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftInputListViewTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		D3C02F521EB0796C00DE3AF5 /* UIAdaptableInputListViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIAdaptableInputListViewTests.swift; path = test/UIAdaptableInputListViewTests.swift; sourceTree = "<group>"; };
 		D3C02F561EB07B7E00DE3AF5 /* MockInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockInput.swift; path = util/MockInput.swift; sourceTree = "<group>"; };
 		D3C02F581EB07D4A00DE3AF5 /* MockSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MockSection.swift; path = util/MockSection.swift; sourceTree = "<group>"; };
@@ -144,7 +143,6 @@
 				D3C02F551EB07B7200DE3AF5 /* util */,
 				D3C02F541EB07B6C00DE3AF5 /* test */,
 				D329CB4F1EADBC32005D512E /* Info.plist */,
-				D3C02F4F1EB076FC00DE3AF5 /* SwiftInputListViewTests-Bridging-Header.h */,
 			);
 			path = SwiftInputListViewTests;
 			sourceTree = "<group>";
@@ -600,7 +598,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiften.SwiftInputListViewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftInputListViewTests/SwiftInputListViewTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -617,7 +615,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiften.SwiftInputListViewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftInputListViewTests/SwiftInputListViewTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

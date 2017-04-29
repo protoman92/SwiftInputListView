@@ -7,6 +7,7 @@ target 'SwiftInputListView' do
 
   # Pods for SwiftInputListView
   pod 'SwiftInputView'
+  pod 'SwiftBaseViews'
 
   target 'SwiftInputListViewTests' do
     inherit! :search_paths
