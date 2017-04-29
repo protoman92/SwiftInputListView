@@ -6,8 +6,8 @@
 //  Copyright © 2017 Swiften. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import SwiftBaseViews
 import SwiftUtilities
 import SwiftUtilitiesTests
 import SwiftUIUtilities
@@ -26,7 +26,7 @@ class UIAdaptableInputListViewTests: XCTestCase {
     fileprivate var inputListView: UIAdaptableInputListView!
     fileprivate let expectationTimeout: TimeInterval = 5
     fileprivate let tries = 1000
-    
+
     override func setUp() {
         super.setUp()
         disposeBag = DisposeBag()
@@ -40,7 +40,7 @@ class UIAdaptableInputListViewTests: XCTestCase {
         presenter = MockPresenter(view: inputListView)
         inputListView.presenter = presenter
     }
-    
+
     func test_setInputs_shouldTriggerReload() {
         // Setup
         let observer = scheduler.createObserver(Any.self)
@@ -164,52 +164,40 @@ class UIAdaptableInputListViewTests: XCTestCase {
     }
 }
 
-class MockPresenter: Presenter {
-    fileprivate let fake_heightConstraint: FakeDetails
-    fileprivate let fake_resetInputDataListeners: FakeDetails
-    fileprivate let fake_updateData: FakeDetails
-    fileprivate let fake_adjustHeight: FakeDetails
-    fileprivate let fake_fitHeight: FakeDetails
-    fileprivate let fake_reloadData: FakeDetails
-    
-    fileprivate let heightConstraint: NSLayoutConstraint
-    
-    fileprivate override init(view: UIAdaptableInputListView) {
-        heightConstraint = NSLayoutConstraint()
-        fake_heightConstraint = FakeDetails.builder().build()
-        fake_resetInputDataListeners = FakeDetails.builder().build()
-        fake_updateData = FakeDetails.builder().build()
-        fake_adjustHeight = FakeDetails.builder().build()
-        fake_fitHeight = FakeDetails.builder().build()
-        fake_reloadData = FakeDetails.builder().build()
-        super.init(view: view)
-    }
-    
+class MockPresenter: UIAdaptableInputListView.Presenter {
+    fileprivate let fake_heightConstraint = FakeDetails.builder().build()
+    fileprivate let fake_resetInputDataListeners = FakeDetails.builder().build()
+    fileprivate let fake_updateData = FakeDetails.builder().build()
+    fileprivate let fake_adjustHeight = FakeDetails.builder().build()
+    fileprivate let fake_fitHeight = FakeDetails.builder().build()
+    fileprivate let fake_reloadData = FakeDetails.builder().build()
+    fileprivate let heightConstraint = NSLayoutConstraint()
+
     override func heightConstraint(for view: UIView?) -> NSLayoutConstraint? {
         fake_heightConstraint.onMethodCalled(withParameters: view)
         return heightConstraint
     }
     
-    override func resetInputDataListeners(with current: Presenter?) {
+    override func resetInputDataListeners(with current: UIAdaptableInputListView.Presenter?) {
         fake_resetInputDataListeners.onMethodCalled(withParameters: nil)
         super.resetInputDataListeners(with: current)
     }
     
     override func updateData(with inputs: [InputSectionHolderType],
-                             with current: Presenter?) {
+                             with current: UIAdaptableInputListView.Presenter?) {
         fake_updateData.onMethodCalled(withParameters: (inputs, current))
         super.updateData(with: inputs, with: current)
     }
     
     override func adjustHeight(for view: UICollectionView?,
                                using inputs: [InputSectionHolderType],
-                               with current: Presenter?) {
+                               with current: UIAdaptableInputListView.Presenter?) {
         fake_adjustHeight.onMethodCalled(withParameters: (view, inputs, current))
         super.adjustHeight(for: view, using: inputs, with: current)
     }
     
     override func fitHeight(using inputs: [InputSectionHolderType],
-                            with current: Presenter?) -> CGFloat {
+                            with current: UIAdaptableInputListView.Presenter?) -> CGFloat {
         fake_fitHeight.onMethodCalled(withParameters: (inputs, current))
         return super.fitHeight(using: inputs, with: current)
     }

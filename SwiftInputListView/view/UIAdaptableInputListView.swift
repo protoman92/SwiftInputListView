@@ -31,15 +31,16 @@ public protocol UIAdaptableInputListViewDelegate: class {
 /// This collection view combines InputData and UIAdaptableInputView and
 /// automatically handles validation etc. As a result, it can handle multiple
 /// input types, such as text/choice etc.
-public final class UIAdaptableInputListView: UICollectionView {
+public final class UIAdaptableInputListView: UIBaseCollectionView {
+    override public var presenterInstance: BaseCollectionViewPresenter? {
+        return presenter
+    }
+    
     lazy var presenter: Presenter = Presenter(view: self)
     
     /// Presenter class for UIAdaptableInputListView.
-    class Presenter: BaseViewPresenter {
-        
-        /// Decorator to configure appearance.
-        let decorator: Variable<InputListViewDecoratorType?>
-        
+    class Presenter: BaseCollectionViewPresenter {
+    
         /// These inputs will be used to populate the collection view. The
         /// variable is used to detect when inputs are added and bind the
         /// data source.
@@ -50,15 +51,12 @@ public final class UIAdaptableInputListView: UICollectionView {
         /// For each
         var inputData: Set<InputData>
         
-        let disposeBag = DisposeBag()
-        
         /// We need a separate DisposeBag for text observers, so that when
         /// new InputData instances are created, we can simply reassign this
         /// variables to allow old disposables to terminate.
         var inputDataDisposeBag = DisposeBag()
         
         init(view: UIAdaptableInputListView) {
-            decorator = Variable(nil)
             inputs = Variable([])
             inputData = Set()
             super.init(view: view)
@@ -73,24 +71,7 @@ public final class UIAdaptableInputListView: UICollectionView {
             view.dataSource = self
             view.delegate = self
             
-            setupDecoratorObserver(for: view, with: self)
             setupInputObserver(for: view, with: self)
-        }
-        
-        /// Stub out this method to avoid double-calling reloadData() during
-        /// unit tests.
-        ///
-        /// - Parameters:
-        ///   - view: The current UICollectionView instance.
-        ///   - current: The current Presenter instance.
-        func setupDecoratorObserver(for view: UICollectionView,
-                                    with current: Presenter) {
-            decorator.asObservable()
-                .doOnNext({[weak current, weak view] _ in
-                    current?.reloadData(for: view)
-                })
-                .subscribe()
-                .addDisposableTo(disposeBag)
         }
         
         /// Stub out this method to avoid double-calling reloadData() during
@@ -213,13 +194,6 @@ public final class UIAdaptableInputListView: UICollectionView {
             return Swift.max(totalHeight, 0)
         }
         
-        /// Reload data for the current collection view.
-        ///
-        /// - Parameter view: A UICollectionView instance.
-        func reloadData(for view: UICollectionView?) {
-            view?.reloadData()
-        }
-        
         /// Get the InputData instance that corresponds to an input.
         ///
         /// - Parameter input: An InputViewDetailValidatorType instance.
@@ -314,12 +288,6 @@ public extension UIAdaptableInputListView {
     /// Expose this to allow external observers.
     public var inputsObservable: Observable<[InputSectionHolderType]> {
         return presenter.inputs.asObservable()
-    }
-    
-    /// When decorator is set, this view will be reloaded.
-    public var decorator: InputListViewDecoratorType? {
-        get { return presenter.decorator.value }
-        set { presenter.decorator.value = newValue }
     }
     
     /// When delegate is set, pass it to presenter.
@@ -469,32 +437,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        let spacing = sectionSpacing 
-        
-        // We set top and bottom insets to space out sections.
-        return UIEdgeInsets(top: spacing, left: 0, bottom: spacing, right: 0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int)
-        -> CGFloat
-    {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int)
-        -> CGFloat
-    {
-        return itemSpacing
-    }
-    
+extension UIAdaptableInputListView.Presenter {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -520,23 +463,6 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout
         let width = collectionView.bounds.width
         let height = sectionHeight
         return CGSize(width: width, height: height)
-    }
-}
-
-// MARK: - InputListViewDecoratorType
-extension UIAdaptableInputListView.Presenter: InputListViewDecoratorType {
-    public var sectionHeight: CGFloat {
-        // Only use header if there are more than 1 section.
-        guard inputs.value.count > 1 else { return 0 }
-        return decorator.value?.sectionHeight ?? Size.small.value ?? 0
-    }
-    
-    public var itemSpacing: CGFloat {
-        return decorator.value?.itemSpacing ?? Space.smaller.value ?? 0
-    }
-    
-    public var sectionSpacing: CGFloat {
-        return decorator.value?.sectionSpacing ?? Space.small.value ?? 0
     }
 }
 
