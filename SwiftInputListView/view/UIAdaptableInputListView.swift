@@ -472,7 +472,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        let spacing = sectionSpacing ?? 0
+        let spacing = sectionSpacing 
         
         // We set top and bottom insets to space out sections.
         return UIEdgeInsets(top: spacing, left: 0, bottom: spacing, right: 0)
@@ -491,7 +491,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout
                         minimumLineSpacingForSectionAt section: Int)
         -> CGFloat
     {
-        return itemSpacing ?? 0
+        return itemSpacing
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -517,25 +517,25 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDelegateFlowLayout
         -> CGSize
     {
         let width = collectionView.bounds.width
-        let height = sectionHeight ?? 0
+        let height = sectionHeight
         return CGSize(width: width, height: height)
     }
 }
 
 // MARK: - InputListViewDecoratorType
 extension UIAdaptableInputListView.Presenter: InputListViewDecoratorType {
-    public var sectionHeight: CGFloat? {
+    public var sectionHeight: CGFloat {
         // Only use header if there are more than 1 section.
         guard inputs.value.count > 1 else { return 0 }
-        return decorator.value?.sectionHeight ?? Size.small.value
+        return decorator.value?.sectionHeight ?? Size.small.value ?? 0
     }
     
-    public var itemSpacing: CGFloat? {
-        return decorator.value?.itemSpacing ?? Space.smaller.value
+    public var itemSpacing: CGFloat {
+        return decorator.value?.itemSpacing ?? Space.smaller.value ?? 0
     }
     
-    public var sectionSpacing: CGFloat? {
-        return decorator.value?.sectionSpacing ?? Space.small.value
+    public var sectionSpacing: CGFloat {
+        return decorator.value?.sectionSpacing ?? Space.small.value ?? 0
     }
 }
 

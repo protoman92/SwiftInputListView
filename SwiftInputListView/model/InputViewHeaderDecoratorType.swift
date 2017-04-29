@@ -8,12 +8,12 @@
 
 import UIKit
 
-/// Decorator class for input view headeer.
-public protocol InputViewHeaderDecoratorType {
+/// Decorator class for input view header.
+@objc public protocol InputViewHeaderDecoratorType {
     
     /// Text color for header title.
-    var headerTitleTextColor: UIColor? { get }
+    @objc optional var headerTitleTextColor: UIColor { get }
     
     /// Background color for header view.
-    var backgroundColor: UIColor? { get }
+    @objc optional var backgroundColor: UIColor { get }
 }

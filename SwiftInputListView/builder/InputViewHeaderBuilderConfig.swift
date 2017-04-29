@@ -41,11 +41,11 @@ extension InputViewHeaderBuilderConfig: InputViewHeaderConfigType {}
 extension InputViewHeaderBuilderConfig: InputViewHeaderIdentifierType {}
 
 extension InputViewHeaderBuilderConfig: InputViewHeaderDecoratorType {
-    public var headerTitleTextColor: UIColor? {
+    public var headerTitleTextColor: UIColor {
         return decorator.headerTitleTextColor ?? .darkGray
     }
     
-    public var backgroundColor: UIColor? {
+    public var backgroundColor: UIColor {
         return decorator.backgroundColor ?? .clear
     }
 }

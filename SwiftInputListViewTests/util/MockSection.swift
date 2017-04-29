@@ -31,6 +31,10 @@ extension InputSection: InputSectionType {
             return "Account information"
         }
     }
+    
+    public var decorator: InputViewHeaderDecoratorType {
+        return InputListViewDecorator(section: self)
+    }
 }
 
 public extension InputSection {
@@ -38,10 +42,6 @@ public extension InputSection {
     var backgroundColor: UIColor? { return nil }
 }
 
-public struct InputListViewDecorator: InputListViewDecoratorType {
-    public var sectionHeight: CGFloat? { return nil }
-    public var sectionSpacing: CGFloat? { return nil }
-    public var itemSpacing: CGFloat? { return nil }
-    
-    public init() {}
+public class InputListViewDecorator: InputViewHeaderDecoratorType {
+    public init(section: InputSectionType) {}
 }

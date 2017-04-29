@@ -10,14 +10,14 @@ import UIKit
 
 /// Implement this protocol to provide configurations for 
 /// UIAdaptableInputListView appearance.
-public protocol InputListViewDecoratorType {
+@objc public protocol InputListViewDecoratorType {
     
     /// This value will be used to separate consecutive cells.
-    var itemSpacing: CGFloat? { get }
+    @objc optional var itemSpacing: CGFloat { get }
     
     /// This value will be used to separate consecutive sections.
-    var sectionSpacing: CGFloat? { get }
+    @objc optional var sectionSpacing: CGFloat { get }
     
     /// This value will be used to resize the header view.
-    var sectionHeight: CGFloat? { get }
+    @objc optional var sectionHeight: CGFloat { get }
 }

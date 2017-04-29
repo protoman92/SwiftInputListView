@@ -10,7 +10,7 @@ import SwiftUtilities
 import UIKit
 
 /// Implement this protocol to provide section information.
-public protocol InputSectionType: InputViewHeaderDecoratorType {
+public protocol InputSectionType {
     
     /// Since we are not using Hashable for this protocol, we can use String
     /// values as keys.
@@ -26,6 +26,9 @@ public protocol InputSectionType: InputViewHeaderDecoratorType {
     /// Configuration class type for dynamic construction of configuration
     /// classes during config phase.
     var viewConfigType: InputViewHeaderConfigType.Type? { get }
+    
+    /// Decorator for header view.
+    var decorator: InputViewHeaderDecoratorType { get }
 }
 
 public extension InputSectionType {
@@ -43,7 +46,7 @@ public extension InputSectionType {
     /// - Returns: An InputViewHeaderConfigType instance.
     public func viewConfig() -> InputViewHeaderConfigType {
         let type = (viewConfigType ?? InputViewHeaderBuilderConfig.self)
-        return type.init(with: self)
+        return type.init(with: self.decorator)
     }
 }
 
