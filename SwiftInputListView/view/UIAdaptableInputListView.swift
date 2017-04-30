@@ -41,10 +41,13 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
     /// Presenter class for UIAdaptableInputListView.
     class Presenter: BaseCollectionViewPresenter {
     
+        /// Return the current InputSectionHolder Array.
+        public var inputs: [InputSectionHolder] { return rxInputs.value }
+        
         /// These inputs will be used to populate the collection view. The
         /// variable is used to detect when inputs are added and bind the
         /// data source.
-        var inputs: Variable<[InputSectionHolderType]>
+        var rxInputs: Variable<[InputSectionHolder]>
         
         weak var delegate: UIAdaptableInputListViewDelegate?
         
@@ -57,7 +60,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         var inputDataDisposeBag = DisposeBag()
         
         init(view: UIAdaptableInputListView) {
-            inputs = Variable([])
+            rxInputs = Variable([])
             inputData = Set()
             super.init(view: view)
             
@@ -84,7 +87,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
                                 with current: Presenter) {
             // When inputs are changed, dispose of all old Disposables,
             // adjust height and reload view.
-            current.inputs.asObservable()
+            current.rxInputs.asObservable()
                 .doOnNext({[weak current] _ in
                     current?.resetInputDataListeners(with: current)
                 })
@@ -112,9 +115,9 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         /// well.
         ///
         /// - Parameters:
-        ///   - inputs: An Array of InputSectionHolderType
+        ///   - inputs: An Array of InputSectionHolder
         ///   - current: The current Presenter instance.
-        func updateData(with inputs: [InputSectionHolderType],
+        func updateData(with inputs: [InputSectionHolder],
                         with current: Presenter?) {
             guard let current = current else {
                 return
@@ -123,8 +126,8 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
             let disposeBag = current.inputDataDisposeBag
             
             let inputData = inputs
-                .flatMap({$0.inputHolders})
-                .flatMap({$0.inputs})
+                .flatMap({$0.items})
+                .flatMap({$0.items})
                 .map({InputData.builder()
                     .with(input: $0)
                     .with(inputValidator: $0)
@@ -149,10 +152,10 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         ///
         /// - Parameters:
         ///   - view: The UIView whose height is requesting change.
-        ///   - inputs: An Array of InputSectionHolderType instances.
+        ///   - inputs: An Array of InputSectionHolder instances.
         ///   - current: The current Presenter instance.
         func adjustHeight(for view: UICollectionView?,
-                          using inputs: [InputSectionHolderType],
+                          using inputs: [InputSectionHolder],
                           with current: Presenter?) {
             guard
                 let view = view,
@@ -172,13 +175,13 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         /// Get the height that fits the current UICollectionView.
         ///
         /// - Parameters:
-        ///   - inputs: An Array of InputSectionHolderType instances.
+        ///   - inputs: An Array of InputSectionHolder instances.
         ///   - current: The current Presenter instance.
         /// - Returns: A CGFloat value.
-        func fitHeight(using inputs: [InputSectionHolderType],
+        func fitHeight(using inputs: [InputSectionHolder],
                        with current: Presenter?) -> CGFloat {
             let sectionCount = inputs.count
-            let inputCount = inputs.flatMap({$0.inputHolders}).count
+            let inputCount = inputs.flatMap({$0.items}).count
             let itemSpace = current?.itemSpacing ?? 0
             let sectionSpace = current?.sectionSpacing ?? 0
             let sectionHeight = current?.sectionHeight ?? 0
@@ -203,7 +206,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         }
         
         /// Get the field that corresponds to an InputViewDetailValidatorType
-        /// instance. We do this by traversing the InputSectionHolderType Array
+        /// instance. We do this by traversing the InputSectionHolder Array
         /// to get an index tuple of (Int, Int, Int), construct an IndexPath
         /// from the first 2 indexes, get the appropriate UICollectionViewCell
         /// and then query its subviews for the inputField.
@@ -217,7 +220,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
             let inputViewType = UIAdaptableInputView.self
             
             guard
-                let i = inputs.value.index(for: input),
+                let i = inputs.index(for: input),
                 let cell = view.cellForItem(at: IndexPath(row: i.0, section: i.1)),
                 let inputView = cell.firstSubview(ofType: inputViewType),
                 let inputField = inputView.inputFields.element(at: i.2)
@@ -275,9 +278,9 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
 public extension UIAdaptableInputListView {
     
     /// When we set inputs, pass them to the presenter.
-    public var inputs: [InputSectionHolderType] {
-        get { return presenter.inputs.value }
-        set { presenter.inputs.value = newValue }
+    public var inputs: [InputSectionHolder] {
+        get { return presenter.rxInputs.value }
+        set { presenter.rxInputs.value = newValue }
     }
     
     /// We expose inputData to allow external observers.
@@ -286,8 +289,8 @@ public extension UIAdaptableInputListView {
     }
     
     /// Expose this to allow external observers.
-    public var inputsObservable: Observable<[InputSectionHolderType]> {
-        return presenter.inputs.asObservable()
+    public var inputsObservable: Observable<[InputSectionHolder]> {
+        return presenter.rxInputs.asObservable()
     }
     
     /// When delegate is set, pass it to presenter.
@@ -297,6 +300,7 @@ public extension UIAdaptableInputListView {
     }
 }
 
+// MARK: - Input values.
 public extension UIAdaptableInputListView {
     
     /// Get all inputFields.
@@ -333,20 +337,28 @@ public extension UIAdaptableInputListView {
     }
 }
 
+extension UIAdaptableInputListView.Presenter {
+    
+    /// Override itemSpacing to provide a different default value.
+    override var itemSpacing: CGFloat {
+        return decorator?.itemSpacing ?? Space.smaller.value ?? 0
+    }
+}
+
 // MARK: - UICollectionViewDataSource
 extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return inputs.value.count
+        return inputs.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        guard let section = inputs.value.element(at: section) else {
+        guard let section = inputs.element(at: section) else {
             debugException()
             return 0
         }
         
-        return section.inputHolders.count
+        return section.items.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -358,8 +370,8 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         guard
             let view = collectionView as? UIAdaptableInputListView,
             let cell = collectionView.deque(with: cellClass, for: indexPath),
-            let section = inputs.value.element(at: indexPath.section),
-            let holder = section.inputHolders.element(at: indexPath.row)
+            let section = inputs.element(at: indexPath.section),
+            let holder = section.items.element(at: indexPath.row)
         else {
             debugException()
             return UICollectionViewCell()
@@ -385,7 +397,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         
         for (index, inputField) in inputView.inputFields.enumerated() {
             guard
-                let input = holder.inputs.element(at: index),
+                let input = holder.items.element(at: index),
                 let data = inputData.filter({
                     $0.inputIdentifier == input.identifier
                 }).first
@@ -414,11 +426,11 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
         let viewClass = UIInputHeader.self
-        let inputs = self.inputs.value
+        let inputs = self.inputs
         
         if
             let view = collectionView.deque(with: viewClass, at: indexPath),
-            let section = inputs.element(at: indexPath.section)?.inputSection
+            let section = inputs.element(at: indexPath.section)?.section
         {
             // We need to remove all subviews and constraints in case cells
             // are reused, leading to duplicate views.
@@ -441,9 +453,9 @@ extension UIAdaptableInputListView.Presenter {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let holder = inputs.value
+        guard let holder = inputs
             .element(at: indexPath.section)?
-            .inputHolders
+            .items
             .element(at: indexPath.row)
         else {
             debugException()
@@ -473,15 +485,13 @@ final class UIInputCell: UICollectionViewCell {}
 final class UIInputHeader: UICollectionReusableView {}
 
 extension UIInputHeader: ReusableViewIdentifierType {
-    public static var kind: ReusableViewKind {
-        return .header
-    }
+    public static var kind: ReusableViewKind { return .header }
 }
 
 // MARK: - Unused.
 extension UIAdaptableInputListView.Presenter: RxCollectionViewDataSourceType {
     public func collectionView(_ collectionView: UICollectionView,
-                               observedEvent: Event<[InputSectionHolderType]>) {
+                               observedEvent: Event<[InputSectionHolder]>) {
         collectionView.reloadData()
     }
 }

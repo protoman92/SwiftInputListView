@@ -6,6 +6,7 @@
 //  Copyright © 2017 Swiften. All rights reserved.
 //
 
+import SwiftBaseViews
 import SwiftInputView
 import SwiftUtilities
 import SwiftUIUtilities
@@ -126,7 +127,7 @@ public extension InputDetail {
     ]
     
     public static var inputHolders = InputDetail.inputs.map({
-        InputHolder.builder().with(inputs: $0).build()
+        InputHolder.builder().with(items: $0).build()
     })
     
     public static var randomInputs: [[InputViewDetailValidatorType]] {
@@ -135,14 +136,14 @@ public extension InputDetail {
         return self.inputs.randomize(elementCount)
     }
     
-    public static var randomInputHolders: [InputHolderType] {
+    public static var randomInputHolders: [InputHolder] {
         let count = self.inputHolders.count
         let elementCount = Int.random(0, count)
         return self.inputHolders.randomize(elementCount)
     }
     
-    public static var randomInputSectionHolders: [InputSectionHolderType] {
-        return self.randomInputHolders.inputSectionHolders
+    public static var randomInputSectionHolders: [InputSectionHolder] {
+        return self.randomInputHolders.sectionHolders
     }
 }
 
@@ -202,7 +203,7 @@ class InputViewDecorator: TextInputViewDecoratorType {
 }
 
 extension InputDetail: InputViewDetailValidatorType {
-    public var section: InputSectionType {
+    public var section: ListSectionType? {
         switch self {
         case .firstName, .lastName, .title, .description:
             return InputSection.personalInformation

@@ -77,7 +77,7 @@ class UIAdaptableInputListViewTests: XCTestCase {
         XCTAssertEqual(presenter.fake_reloadData.methodCount, tries + 1)
     }
     
-    func validateHeight(using inputs: [InputSectionHolderType],
+    func validateHeight(using inputs: [InputSectionHolder],
                         with presenter: MockPresenter) {
         XCTAssertTrue(presenter.heightConstraint.constant >= 0)
         XCTAssertTrue(presenter.heightConstraint.constant >= inputs.totalHeight)
@@ -85,7 +85,7 @@ class UIAdaptableInputListViewTests: XCTestCase {
     
     func test_enterInputValues_shouldWork() {
         // Setup
-        let inputs = InputDetail.inputHolders.inputSectionHolders
+        let inputs = InputDetail.inputHolders.sectionHolders
         let subject = PublishSubject<Void>()
         let observer = scheduler.createObserver(Any.self)
         let expect = expectation(description: "Should have worked")
@@ -183,20 +183,20 @@ class MockPresenter: UIAdaptableInputListView.Presenter {
         super.resetInputDataListeners(with: current)
     }
     
-    override func updateData(with inputs: [InputSectionHolderType],
+    override func updateData(with inputs: [InputSectionHolder],
                              with current: UIAdaptableInputListView.Presenter?) {
         fake_updateData.onMethodCalled(withParameters: (inputs, current))
         super.updateData(with: inputs, with: current)
     }
     
     override func adjustHeight(for view: UICollectionView?,
-                               using inputs: [InputSectionHolderType],
+                               using inputs: [InputSectionHolder],
                                with current: UIAdaptableInputListView.Presenter?) {
         fake_adjustHeight.onMethodCalled(withParameters: (view, inputs, current))
         super.adjustHeight(for: view, using: inputs, with: current)
     }
     
-    override func fitHeight(using inputs: [InputSectionHolderType],
+    override func fitHeight(using inputs: [InputSectionHolder],
                             with current: UIAdaptableInputListView.Presenter?) -> CGFloat {
         fake_fitHeight.onMethodCalled(withParameters: (inputs, current))
         return super.fitHeight(using: inputs, with: current)

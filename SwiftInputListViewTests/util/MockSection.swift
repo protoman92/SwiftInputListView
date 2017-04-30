@@ -6,6 +6,7 @@
 //  Copyright © 2017 Swiften. All rights reserved.
 //
 
+import SwiftBaseViews
 import SwiftInputView
 
 public enum InputSection: String {
@@ -14,9 +15,9 @@ public enum InputSection: String {
     case accountInformation
 }
 
-extension InputSection: InputSectionType {
-    public var viewBuilderType: InputViewHeaderBuilderType.Type? { return nil }
-    public var viewConfigType: InputViewHeaderConfigType.Type? { return nil }
+extension InputSection: ListSectionType {
+    public var viewBuilderType: ListHeaderBuilderType.Type? { return nil }
+    public var viewConfigType: ListHeaderConfigType.Type? { return nil }
     public var identifier: String { return rawValue }
     
     public var header: String {
@@ -32,8 +33,8 @@ extension InputSection: InputSectionType {
         }
     }
     
-    public var decorator: InputViewHeaderDecoratorType {
-        return InputListViewDecorator(section: self)
+    public var decorator: ListHeaderDecoratorType {
+        return InputHeaderDecorator(section: self)
     }
 }
 
@@ -42,6 +43,6 @@ public extension InputSection {
     var backgroundColor: UIColor? { return nil }
 }
 
-public class InputListViewDecorator: InputViewHeaderDecoratorType {
-    public init(section: InputSectionType) {}
+public class InputHeaderDecorator: ListHeaderDecoratorType {
+    public init(section: ListSectionType) {}
 }
