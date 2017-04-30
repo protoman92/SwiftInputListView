@@ -161,8 +161,8 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
                 let view = view,
                 let current = current,
                 let height = heightConstraint(for: view)
-                else {
-                    return
+            else {
+                return
             }
             
             height.constant = current.fitHeight(using: inputs, with: current)
@@ -224,9 +224,9 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
                 let cell = view.cellForItem(at: IndexPath(row: i.0, section: i.1)),
                 let inputView = cell.firstSubview(ofType: inputViewType),
                 let inputField = inputView.inputFields.element(at: i.2)
-                else {
-                    debugException()
-                    return nil
+            else {
+                debugException()
+                return nil
             }
             
             return inputField
@@ -382,9 +382,9 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
             let cell = collectionView.deque(with: cellClass, for: indexPath),
             let section = inputs.element(at: indexPath.section),
             let holder = section.items.element(at: indexPath.row)
-            else {
-                debugException()
-                return UICollectionViewCell()
+        else {
+            debugException()
+            return UICollectionViewCell()
         }
         
         let builder = InputViewBuilder(from: holder.inputDetails)
@@ -410,9 +410,9 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
                 let data = inputData.filter({
                     $0.inputIdentifier == input.identifier
                 }).first
-                else {
-                    debugException()
-                    continue
+            else {
+                debugException()
+                continue
             }
             
             inputField.rxText.asObservable()
@@ -460,11 +460,10 @@ extension UIAdaptableInputListView.Presenter {
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let holder = inputs
             .element(at: indexPath.section)?
-            .items
-            .element(at: indexPath.row)
-            else {
-                debugException()
-                return CGSize.zero
+            .items.element(at: indexPath.row)
+        else {
+            debugException()
+            return CGSize.zero
         }
         
         let width = collectionView.bounds.width
@@ -477,6 +476,10 @@ extension UIAdaptableInputListView.Presenter {
                         referenceSizeForHeaderInSection section: Int)
         -> CGSize
     {
+        guard inputs.isNotEmpty, inputs.element(at: section)?.section != nil else {
+            return CGSize.zero
+        }
+        
         let width = collectionView.bounds.width
         let height = sectionHeight
         return CGSize(width: width, height: height)

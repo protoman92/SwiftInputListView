@@ -29,38 +29,3 @@ public extension ListItemHolderType where Item == InputViewDetailValidatorType {
     
     public var section: ListSectionType? { return items.first?.section }
 }
-
-public extension Sequence where
-    Iterator.Element: ListItemHolderType,
-    Iterator.Element.Item == InputViewDetailValidatorType
-{
-    /// Get an Array of ListSectionHolderType, based on each
-    /// SectionableListItemType section.
-    public var sectionHolders: [InputSectionHolder] {
-        var sectionHolders = [InputSectionHolder]()
-        let sections = self.flatMap({$0.section})
-        
-        for section in sections {
-            // There might be duplicate sections, so we skip if a section
-            // has already been added.
-            guard !sectionHolders.contains(where: {
-                $0.section.identifier == section.identifier
-            }) else {
-                continue
-            }
-            
-            let holders = filter({$0.section?.identifier == section.identifier})
-                .map({$0.items})
-                .map({InputHolder.builder().with(items: $0).build()})
-            
-            let sectionHolder = InputSectionHolder
-                .builder(with: section)
-                .with(items: holders)
-                .build()
-            
-            sectionHolders.append(sectionHolder)
-        }
-        
-        return sectionHolders
-    }
-}
