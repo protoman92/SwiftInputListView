@@ -37,7 +37,7 @@ public enum InputDetail {
     }
 }
 
-extension InputDetail: TextInputViewDetailType {
+extension InputDetail: InputViewDetailType {
     public var identifier: String { return String(describing: self) }
     public var isRequired: Bool { return true }
     

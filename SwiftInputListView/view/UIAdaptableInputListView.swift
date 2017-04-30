@@ -40,7 +40,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
     
     /// Presenter class for UIAdaptableInputListView.
     class Presenter: BaseCollectionViewPresenter {
-    
+        
         /// Return the current InputSectionHolder Array.
         public var inputs: [InputSectionHolder] { return rxInputs.value }
         
@@ -161,8 +161,8 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
                 let view = view,
                 let current = current,
                 let height = heightConstraint(for: view)
-            else {
-                return
+                else {
+                    return
             }
             
             height.constant = current.fitHeight(using: inputs, with: current)
@@ -224,9 +224,9 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
                 let cell = view.cellForItem(at: IndexPath(row: i.0, section: i.1)),
                 let inputView = cell.firstSubview(ofType: inputViewType),
                 let inputField = inputView.inputFields.element(at: i.2)
-            else {
-                debugException()
-                return nil
+                else {
+                    debugException()
+                    return nil
             }
             
             return inputField
@@ -237,7 +237,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         /// - Parameters:
         ///   - input: An InputViewDetailValidatorType instance.
         ///   - view: The current UIAdaptableInputListView instance.
-        /// - Returns: A Bool value that represent whether the operation 
+        /// - Returns: A Bool value that represent whether the operation
         ///            succeeded.
         @discardableResult
         func clearValue(for input: InputViewDetailValidatorType,
@@ -251,7 +251,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         ///   - input: An InputViewDetailValidatorType instance.
         ///   - value: An optional String value.
         ///   - view: The current UIAdaptableInputListView instance.
-        /// - Returns: A Bool value that represents whether the operation 
+        /// - Returns: A Bool value that represents whether the operation
         ///            succeeded.
         @discardableResult
         func enterValue(for input: InputViewDetailValidatorType,
@@ -339,6 +339,16 @@ public extension UIAdaptableInputListView {
 
 extension UIAdaptableInputListView.Presenter {
     
+    /// Override sectionHeight to provide a different default value.
+    override var sectionHeight: CGFloat {
+        return decorator?.sectionHeight ?? Size.small.value ?? 0
+    }
+    
+    /// Override sectionSpacing to provide a different default value.
+    override var sectionSpacing: CGFloat {
+        return decorator?.sectionSpacing ?? Space.smaller.value ?? 0
+    }
+    
     /// Override itemSpacing to provide a different default value.
     override var itemSpacing: CGFloat {
         return decorator?.itemSpacing ?? Space.smaller.value ?? 0
@@ -372,9 +382,9 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
             let cell = collectionView.deque(with: cellClass, for: indexPath),
             let section = inputs.element(at: indexPath.section),
             let holder = section.items.element(at: indexPath.row)
-        else {
-            debugException()
-            return UICollectionViewCell()
+            else {
+                debugException()
+                return UICollectionViewCell()
         }
         
         let builder = InputViewBuilder(from: holder.inputDetails)
@@ -401,9 +411,9 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
                 let data = inputData.filter({
                     $0.inputIdentifier == input.identifier
                 }).first
-            else {
-                debugException()
-                continue
+                else {
+                    debugException()
+                    continue
             }
             
             inputField.rxText.asObservable()
@@ -457,9 +467,9 @@ extension UIAdaptableInputListView.Presenter {
             .element(at: indexPath.section)?
             .items
             .element(at: indexPath.row)
-        else {
-            debugException()
-            return CGSize.zero
+            else {
+                debugException()
+                return CGSize.zero
         }
         
         let width = collectionView.bounds.width
