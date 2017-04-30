@@ -388,8 +388,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
         }
         
         let builder = InputViewBuilder(from: holder.inputDetails)
-        let config = InputViewBuilderConfig(from: holder.inputDecorators)
-        let inputView = UIAdaptableInputView(with: builder, and: config)
+        let inputView = UIAdaptableInputView(with: builder)
         let contentView = cell.contentView
         
         // We need to remove all views and constraints to prevent
@@ -446,11 +445,7 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
             // are reused, leading to duplicate views.
             view.subviews.forEach({$0.removeFromSuperview()})
             view.constraints.forEach(view.removeConstraint)
-            
-            let builder = section.viewBuilder()
-            let config = section.viewConfig()
-            view.populateSubviews(with: builder)
-            config.configure(for: view)
+            view.populateSubviews(with: section.viewBuilder())
             return view
         } else {
             return UICollectionReusableView()

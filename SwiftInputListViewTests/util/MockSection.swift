@@ -17,7 +17,6 @@ public enum InputSection: String {
 
 extension InputSection: ListSectionType {
     public var viewBuilderType: ListHeaderBuilderType.Type? { return nil }
-    public var viewConfigType: ListHeaderConfigType.Type? { return nil }
     public var identifier: String { return rawValue }
     
     public var header: String {
