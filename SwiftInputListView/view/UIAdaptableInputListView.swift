@@ -455,9 +455,11 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension UIAdaptableInputListView.Presenter {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         guard let holder = inputs
             .element(at: indexPath.section)?
             .items.element(at: indexPath.row)
