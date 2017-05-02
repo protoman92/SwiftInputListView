@@ -41,6 +41,10 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
     /// Presenter class for UIAdaptableInputListView.
     class Presenter: BaseCollectionViewPresenter {
         
+        /// Set this to true once layoutSubviews() is called for the first
+        /// time.
+        fileprivate lazy var initialized = false
+        
         /// Return the current InputSectionHolder Array.
         public var inputs: [InputSectionHolder] { return rxInputs.value }
         
@@ -69,11 +73,23 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
             // to use it inside a UIScrollView.
             view.isScrollEnabled = false
             view.clipsToBounds = false
+        }
+        
+        /// Setup dataSource and delegate, and input observer here.
+        ///
+        /// - Parameter view: A UIView instance.
+        override open func layoutSubviews(for view: UIView) {
+            super.layoutSubviews(for: view)
+            
+            guard !initialized, let view = view as? UICollectionView else {
+                return
+            }
+            
+            defer { initialized = true }
+            
             view.register(with: UIInputCell.self)
             view.register(with: UIInputHeader.self)
             view.dataSource = self
-            view.delegate = self
-            
             setupInputObserver(for: view, with: self)
         }
         
@@ -445,7 +461,10 @@ extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
             // are reused, leading to duplicate views.
             view.subviews.forEach({$0.removeFromSuperview()})
             view.constraints.forEach(view.removeConstraint)
-            view.populateSubviews(with: section.viewBuilder())
+            
+            let builder = section.viewBuilder()
+            view.populateSubviews(with: builder)
+            builder.configure(for: view)
             return view
         } else {
             return UICollectionReusableView()
