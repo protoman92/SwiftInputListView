@@ -41,10 +41,6 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
     /// Presenter class for UIAdaptableInputListView.
     class Presenter: BaseCollectionViewPresenter {
         
-        /// Set this to true once layoutSubviews() is called for the first
-        /// time.
-        fileprivate lazy var initialized = false
-        
         /// Return the current InputSectionHolder Array.
         public var inputs: [InputSectionHolder] { return rxInputs.value }
         
@@ -73,23 +69,8 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
             // to use it inside a UIScrollView.
             view.isScrollEnabled = false
             view.clipsToBounds = false
-        }
-        
-        /// Setup dataSource and delegate, and input observer here.
-        ///
-        /// - Parameter view: A UIView instance.
-        override open func layoutSubviews(for view: UIView) {
-            super.layoutSubviews(for: view)
-            
-            guard !initialized, let view = view as? UICollectionView else {
-                return
-            }
-            
-            defer { initialized = true }
-            
             view.register(with: UIInputCell.self)
             view.register(with: UIInputHeader.self)
-            view.dataSource = self
             setupInputObserver(for: view, with: self)
         }
         
@@ -372,23 +353,18 @@ extension UIAdaptableInputListView.Presenter {
 }
 
 // MARK: - UICollectionViewDataSource
-extension UIAdaptableInputListView.Presenter: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+extension UIAdaptableInputListView.Presenter {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return inputs.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        guard let section = inputs.element(at: section) else {
-            debugException()
-            return 0
-        }
-        
-        return section.items.count
+    override func collectionView(_ collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
+        return inputs.element(at: section)?.items.count ?? 0
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath)
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath)
         -> UICollectionViewCell
     {
         let cellClass = UIInputCell.self

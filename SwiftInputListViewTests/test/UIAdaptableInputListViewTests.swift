@@ -39,6 +39,7 @@ class UIAdaptableInputListViewTests: XCTestCase {
         
         presenter = MockPresenter(view: inputListView)
         inputListView.presenter = presenter
+        inputListView.layoutSubviews()
     }
 
     func test_setInputs_shouldTriggerReload() {
