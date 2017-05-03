@@ -15,7 +15,10 @@ import SwiftUIUtilities
 import UIKit
 
 /// Implement this protocol to provide delegation for UIAdapterInputListView.
-public protocol UIAdaptableInputListViewDelegate: class {
+/// This protocol extends from ControllerPresentableType as well, in order to
+/// provide controller-presenting capability, esp. for inputs that require
+/// controllers to be presented.
+public protocol UIAdaptableInputListViewDelegate: class, ControllerPresentableType {
     
     /// Provide default input for an InputViewDetailType instance.
     ///
@@ -294,6 +297,16 @@ public extension UIAdaptableInputListView {
     public var inputListViewDelegate: UIAdaptableInputListViewDelegate? {
         get { return presenter.delegate }
         set { presenter.delegate = newValue }
+    }
+}
+
+// MARK: - InputHolderViewType.
+extension UIAdaptableInputListView: InputHolderViewType {
+    
+    /// Return the delegate, since it extends ControllerPresentableType.
+    public weak var controllerPresentable: ControllerPresentableType? {
+        get { return inputListViewDelegate }
+        set { fatalError("Not implemented") }
     }
 }
 
