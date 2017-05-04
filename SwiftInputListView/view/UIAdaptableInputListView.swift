@@ -18,8 +18,11 @@ import UIKit
 /// This protocol extends from ControllerPresentableType as well, in order to
 /// provide controller-presenting capability, esp. for inputs that require
 /// controllers to be presented.
-public protocol UIAdaptableInputListViewDelegate: class, ControllerPresentableType {
-    
+public protocol UIAdaptableInputListViewDelegate: class,
+    UIBaseCollectionViewDelegate,
+    ControllerPresentableType,
+    ReactiveOrientationDetectorType
+{    
     /// Provide default input for an InputViewDetailType instance.
     ///
     /// - Parameters:
@@ -52,7 +55,11 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         /// data source.
         var rxInputs: Variable<[InputSectionHolder]>
         
-        weak var delegate: UIAdaptableInputListViewDelegate?
+        /// We don't use a variable for this for fear of strong captures.
+        /// Use property observers instead.
+        weak var delegate: UIAdaptableInputListViewDelegate? {
+            return self.baseDelegate as? UIAdaptableInputListViewDelegate
+        }
         
         /// For each
         var inputData: Set<InputData>
@@ -119,9 +126,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
         ///   - current: The current Presenter instance.
         func updateData(with inputs: [InputSectionHolder],
                         with current: Presenter?) {
-            guard let current = current else {
-                return
-            }
+            guard let current = current else { return }
             
             let disposeBag = current.inputDataDisposeBag
             
@@ -188,7 +193,7 @@ public final class UIAdaptableInputListView: UIBaseCollectionView {
             
             let height = inputs.totalHeight
             let totalIS = itemSpace * CGFloat(inputCount - 1)
-            let totalSS = sectionSpace * 2 * CGFloat(sectionCount - 1)
+            let totalSS = sectionSpace * 2 * CGFloat(sectionCount)
             let totalSH = sectionHeight * CGFloat(sectionCount)
             let totalHeight = height + totalIS + totalSS + totalSH
             
@@ -292,12 +297,6 @@ public extension UIAdaptableInputListView {
     public var inputsObservable: Observable<[InputSectionHolder]> {
         return presenter.rxInputs.asObservable()
     }
-    
-    /// When delegate is set, pass it to presenter.
-    public var inputListViewDelegate: UIAdaptableInputListViewDelegate? {
-        get { return presenter.delegate }
-        set { presenter.delegate = newValue }
-    }
 }
 
 // MARK: - InputHolderViewType.
@@ -305,7 +304,7 @@ extension UIAdaptableInputListView: InputHolderViewType {
     
     /// Return the delegate, since it extends ControllerPresentableType.
     public weak var controllerPresentable: ControllerPresentableType? {
-        get { return inputListViewDelegate }
+        get { return presenter.delegate }
         set { fatalError("Not implemented") }
     }
 }
@@ -344,6 +343,12 @@ public extension UIAdaptableInputListView {
     func enterValue(for input: InputViewDetailValidatorType,
                     with value: String?) -> Bool {
         return presenter.enterValue(for: input, with: value, with: self)
+    }
+}
+
+extension UIAdaptableInputListView.Presenter {
+    public var view: UIAdaptableInputListView? {
+        return viewDelegate as? UIAdaptableInputListView
     }
 }
 
